@@ -106,9 +106,15 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                                                 <?php if (!empty($vhost['serverAlias'])): ?>
                                                 <div class="text-info-line">
                                                     <i class="bi bi-link-45deg"></i> 
-                                                    <span class="text-muted" title="<?php echo htmlspecialchars($vhost['serverAlias'] ?? ''); ?>">
-                                                        <?php echo htmlspecialchars($vhost['serverAlias'] ?? ''); ?>
-                                                    </span>
+                                                    <div class="alias-list text-muted">
+                                                        <?php 
+                                                        $aliases = preg_split('/\s+/', trim($vhost['serverAlias']));
+                                                        foreach($aliases as $alias): ?>
+                                                            <div class="alias-item" title="<?php echo htmlspecialchars($alias); ?>">
+                                                                <?php echo htmlspecialchars($alias); ?>
+                                                            </div>
+                                                        <?php endforeach; ?>
+                                                    </div>
                                                 </div>
                                                 <?php endif; ?>
                                             </div>
