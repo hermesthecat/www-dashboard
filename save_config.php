@@ -45,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $config .= "define('PROXY_PORT', {$proxyPort});\n\n";
     $config .= "// File Path Configuration\n";
     $config .= "define('VHOSTS_FILE', '{$vhostsFile}');\n\n";
-    $config .= "// Other configurations can be added here\n";
 
     // Write to config file
     if (file_put_contents('config.php', $config)) {
