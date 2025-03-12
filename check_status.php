@@ -1,6 +1,9 @@
 <?php
 header('Content-Type: application/json');
 
+// Configuration constants from index.php
+require_once 'config.php';
+
 function checkVhostStatus($url) {
     $ch = curl_init("http://" . $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -11,6 +14,13 @@ function checkVhostStatus($url) {
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
+    // Add proxy configuration if enabled
+    if (defined('PROXY_ENABLED') && PROXY_ENABLED) {
+        curl_setopt($ch, CURLOPT_PROXY, PROXY_ADDRESS);
+        curl_setopt($ch, CURLOPT_PROXYPORT, PROXY_PORT);
+        curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+    }
+
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $error = curl_error($ch);
@@ -20,7 +30,8 @@ function checkVhostStatus($url) {
     return [
         'status' => $httpCode > 0 ? ($httpCode < 400 ? 'online' : 'error') : 'offline',
         'code' => $httpCode,
-        'error' => $error
+        'error' => $error,
+        'proxy_used' => defined('PROXY_ENABLED') && PROXY_ENABLED
     ];
 }
 

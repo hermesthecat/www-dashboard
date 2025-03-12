@@ -47,8 +47,9 @@ $vhosts = parseVhosts('httpd-vhosts.conf');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WWW Dashboard</title>
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
@@ -65,6 +66,9 @@ $vhosts = parseVhosts('httpd-vhosts.conf');
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">Virtual Hosts</h5>
+                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proxyModal">
+                                <i class="bi bi-gear"></i> Proxy Settings
+                            </button>
                             <div id="vhostCounter" class="text-muted"></div>
                         </div>
                         <div class="mt-3">
@@ -108,6 +112,42 @@ $vhosts = parseVhosts('httpd-vhosts.conf');
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proxy Settings Modal -->
+    <div class="modal fade" id="proxyModal" tabindex="-1" aria-labelledby="proxyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="proxyModalLabel">Proxy Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="proxyForm" action="save_config.php" method="post">
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="proxyEnabled" name="proxy_enabled" <?php echo defined('PROXY_ENABLED') && PROXY_ENABLED ? 'checked' : ''; ?>>
+                                <label class="form-check-label" for="proxyEnabled">Enable Proxy</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="proxyAddress" class="form-label">Proxy Address</label>
+                            <input type="text" class="form-control" id="proxyAddress" name="proxy_address"
+                                   value="<?php echo defined('PROXY_ADDRESS') ? PROXY_ADDRESS : '127.0.0.1'; ?>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="proxyPort" class="form-label">Proxy Port</label>
+                            <input type="number" class="form-control" id="proxyPort" name="proxy_port"
+                                   value="<?php echo defined('PROXY_PORT') ? PROXY_PORT : '8080'; ?>">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" form="proxyForm" class="btn btn-primary">Save Changes</button>
                 </div>
             </div>
         </div>
