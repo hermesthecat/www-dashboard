@@ -1,22 +1,8 @@
 <?php
-// Path normalization function
-function normalizePath($path)
-{
-    // Convert Windows backslashes to forward slashes
-    $path = str_replace('\\', '/', $path);
-    // Remove multiple consecutive slashes
-    $path = preg_replace('|(?<=.)/+|', '/', $path);
-    // Remove trailing slash
-    return rtrim($path, '/');
-}
-
-// System-specific path separator
-define('DS', DIRECTORY_SEPARATOR);
-
 // Proxy Configuration
-define('PROXY_ENABLED', true);  // Set to true to enable proxy
-define('PROXY_ADDRESS', '127.0.0.1');  // Proxy server address
-define('PROXY_PORT', 80);  // Proxy server port
+define('PROXY_ENABLED', true);
+define('PROXY_ADDRESS', '127.0.0.1');
+define('PROXY_PORT', 80);
 
 // File Path Configuration
-define('VHOSTS_FILE', normalizePath(__DIR__ . DS . 'httpd-vhosts.conf'));  // Path to Apache vhosts configuration file
+define('VHOSTS_FILE', 'Y:/UltraWebServer/core/apache2/conf/extra/httpd-vhosts.conf');

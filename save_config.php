@@ -18,6 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         return rtrim($path, '/');
     }
 
+    // Polyfill for str_starts_with() function for PHP < 8.0
+    if (!function_exists('str_starts_with')) {
+        function str_starts_with($haystack, $needle)
+        {
+            return (string)$needle !== '' && strncmp($haystack, $needle, strlen($needle)) === 0;
+        }
+    }
+
     // VHosts file path
     $vhostsFile = filter_var($_POST['vhosts_file'], FILTER_SANITIZE_STRING) ?: 'httpd-vhosts.conf';
     if (!str_starts_with($vhostsFile, '/') && !preg_match('~^[A-Z]:~i', $vhostsFile)) {
