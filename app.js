@@ -1,34 +1,34 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Proxy form submission
     const proxyForm = document.getElementById('proxyForm');
     if (proxyForm) {
-        proxyForm.addEventListener('submit', function(e) {
+        proxyForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             fetch('save_config.php', {
                 method: 'POST',
                 body: new FormData(proxyForm)
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Close modal
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('proxyModal'));
-                    modal.hide();
-                    
-                    // Refresh status checks
-                    const statusIndicators = document.querySelectorAll('.status-indicator');
-                    statusIndicators.forEach((indicator, index) => {
-                        setTimeout(() => checkStatus(indicator), index * 500);
-                    });
-                } else {
-                    alert('Failed to save proxy settings: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error saving proxy settings:', error);
-                alert('Failed to save proxy settings. Please try again.');
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Close modal
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('proxyModal'));
+                        modal.hide();
+
+                        // Refresh status checks
+                        const statusIndicators = document.querySelectorAll('.status-indicator');
+                        statusIndicators.forEach((indicator, index) => {
+                            setTimeout(() => checkStatus(indicator), index * 500);
+                        });
+                    } else {
+                        alert('Failed to save proxy settings: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving proxy settings:', error);
+                    alert('Failed to save proxy settings. Please try again.');
+                });
         });
     }
 
@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 statusIndicator.classList.remove('status-checking');
                 statusIndicator.classList.remove('status-online', 'status-offline', 'status-error');
-                
-                switch(data.status) {
+
+                switch (data.status) {
                     case 'online':
                         statusIndicator.classList.add('status-online');
                         text.textContent = 'Online';
@@ -89,9 +89,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const vhostTable = document.getElementById('vhostTable');
     const tableRows = vhostTable.getElementsByTagName('tr');
 
-    searchInput.addEventListener('keyup', function() {
+    searchInput.addEventListener('keyup', function () {
         const searchTerm = searchInput.value.toLowerCase();
-        
+
         // Start from 1 to skip header row
         for (let i = 1; i < tableRows.length; i++) {
             const row = tableRows[i];
@@ -116,10 +116,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let ascending = true;
 
     Array.from(ths).forEach((th, index) => {
-        th.addEventListener('click', function() {
+        th.addEventListener('click', function () {
             const tbody = vhostTable.querySelector('tbody');
             const rows = Array.from(tbody.getElementsByTagName('tr'));
-            
+
             // Reset arrows on all headers except current
             Array.from(ths).forEach(header => {
                 if (header !== th) {
@@ -143,8 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
             rows.sort((a, b) => {
                 const aText = a.cells[index].textContent.trim().toLowerCase();
                 const bText = b.cells[index].textContent.trim().toLowerCase();
-                return ascending ? 
-                    aText.localeCompare(bText) : 
+                return ascending ?
+                    aText.localeCompare(bText) :
                     bText.localeCompare(aText);
             });
 
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Counter functionality
     function updateCounter() {
         const counter = document.getElementById('vhostCounter');
-        const visibleRows = Array.from(tableRows).slice(1).filter(row => 
+        const visibleRows = Array.from(tableRows).slice(1).filter(row =>
             row.style.display !== 'none'
         ).length;
         counter.textContent = `Showing ${visibleRows} of ${tableRows.length - 1} vhosts`;
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update counter on search
     searchInput.addEventListener('keyup', updateCounter);
-    
+
     // Initial counter update
     updateCounter();
 });

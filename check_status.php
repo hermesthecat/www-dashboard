@@ -4,7 +4,8 @@ header('Content-Type: application/json');
 // Configuration constants from index.php
 require_once 'config.php';
 
-function checkVhostStatus($url) {
+function checkVhostStatus($url)
+{
     $ch = curl_init("http://" . $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_NOBODY, true);
@@ -24,7 +25,7 @@ function checkVhostStatus($url) {
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $error = curl_error($ch);
-    
+
     curl_close($ch);
 
     return [
