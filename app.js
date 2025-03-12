@@ -86,84 +86,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Search functionality
     const searchInput = document.getElementById('searchInput');
-    const vhostTable = document.getElementById('vhostTable');
-    const tableRows = vhostTable.getElementsByTagName('tr');
+    const vhostCards = document.getElementById('vhostCards');
+    const cards = vhostCards.getElementsByClassName('vhost-item');
 
     searchInput.addEventListener('keyup', function () {
         const searchTerm = searchInput.value.toLowerCase();
 
-        // Start from 1 to skip header row
-        for (let i = 1; i < tableRows.length; i++) {
-            const row = tableRows[i];
-            const cells = row.getElementsByTagName('td');
-            let found = false;
-
-            for (let j = 0; j < cells.length - 1; j++) { // -1 to skip Actions column
-                const cellText = cells[j].textContent.toLowerCase();
-                if (cellText.includes(searchTerm)) {
-                    found = true;
-                    break;
-                }
-            }
-
-            row.style.display = found ? '' : 'none';
-        }
-    });
-
-    // Sorting functionality
-    const ths = document.getElementsByClassName('sortable');
-    let lastSortedColumn = null;
-    let ascending = true;
-
-    Array.from(ths).forEach((th, index) => {
-        th.addEventListener('click', function () {
-            const tbody = vhostTable.querySelector('tbody');
-            const rows = Array.from(tbody.getElementsByTagName('tr'));
-
-            // Reset arrows on all headers except current
-            Array.from(ths).forEach(header => {
-                if (header !== th) {
-                    header.classList.remove('asc', 'desc');
-                }
-            });
-
-            // Determine sort direction
-            if (lastSortedColumn === index) {
-                ascending = !ascending;
-            } else {
-                ascending = true;
-            }
-            lastSortedColumn = index;
-
-            // Update arrow class
-            th.classList.toggle('asc', ascending);
-            th.classList.toggle('desc', !ascending);
-
-            // Sort rows
-            rows.sort((a, b) => {
-                const aText = a.cells[index].textContent.trim().toLowerCase();
-                const bText = b.cells[index].textContent.trim().toLowerCase();
-                return ascending ?
-                    aText.localeCompare(bText) :
-                    bText.localeCompare(aText);
-            });
-
-            // Reattach sorted rows
-            rows.forEach(row => tbody.appendChild(row));
+        Array.from(cards).forEach(card => {
+            const cardContent = card.textContent.toLowerCase();
+            card.style.display = cardContent.includes(searchTerm) ? '' : 'none';
         });
+
+        updateCounter();
     });
 
     // Counter functionality
     function updateCounter() {
         const counter = document.getElementById('vhostCounter');
-        const visibleRows = Array.from(tableRows).slice(1).filter(row =>
-            row.style.display !== 'none'
+        const visibleCards = Array.from(cards).filter(card =>
+            card.style.display !== 'none'
         ).length;
-        counter.textContent = `Showing ${visibleRows} of ${tableRows.length - 1} vhosts`;
+        const totalCards = cards.length;
+        counter.textContent = `${visibleCards} / ${totalCards} sanal host gösteriliyor`;
     }
-
-    // Update counter on search
-    searchInput.addEventListener('keyup', updateCounter);
 
     // Initial counter update
     updateCounter();

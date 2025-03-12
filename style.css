@@ -137,19 +137,17 @@
 
 /* Status indicators */
 .status-indicator {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
 }
 
 .status-dot {
     width: 10px;
     height: 10px;
     border-radius: 50%;
+    background-color: #ccc;
     display: inline-block;
-    background-color: #6c757d;
-    /* Default gray for checking */
-    transition: background-color 0.3s ease;
 }
 
 .status-text {
@@ -187,24 +185,13 @@
 
 /* Pulse animation for checking state */
 @keyframes pulse {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-
-    50% {
-        transform: scale(1.2);
-        opacity: 0.7;
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
 }
 
 .status-checking .status-dot {
-    animation: pulse 1.5s infinite;
+    animation: pulse 1s infinite;
 }
 
 /* Animation for row updates */
@@ -216,4 +203,68 @@
 .table.loading {
     opacity: 0.6;
     pointer-events: none;
+}
+
+/* New card styles */
+.vhost-item .card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid rgba(0,0,0,.125);
+    height: auto !important;
+}
+
+.vhost-item .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.vhost-item .card-title {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: #333;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.vhost-item .card-text {
+    font-size: 0.875rem;
+}
+
+.vhost-item .card-text span {
+    white-space: normal;
+    word-wrap: break-word;
+    display: inline-block;
+    width: 100%;
+}
+
+.vhost-item .card-header {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.vhost-item .card-footer {
+    border-top: none;
+    background: transparent;
+}
+
+.vhost-item .bi {
+    margin-right: 0.5rem;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.vhost-item .text-info-line {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.vhost-item .text-info-line i {
+    margin-top: 0.2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .vhost-item {
+        margin-bottom: 1rem;
+    }
 }

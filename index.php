@@ -78,44 +78,51 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                             <div id="vhostCounter" class="text-muted"></div>
                         </div>
                         <div class="mt-3">
-                            <input type="text" id="searchInput" class="form-control" placeholder="Search virtual hosts...">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Sanal hostlarda ara...">
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover" id="vhostTable">
-                                <thead>
-                                    <tr>
-                                        <th class="sortable">Status <span class="sort-arrow"></span></th>
-                                        <th class="sortable">Server Name <span class="sort-arrow"></span></th>
-                                        <th class="sortable">Document Root <span class="sort-arrow"></span></th>
-                                        <th class="sortable">Server Admin <span class="sort-arrow"></span></th>
-                                        <th class="sortable">Server Alias <span class="sort-arrow"></span></th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($vhosts as $vhost): ?>
-                                        <tr>
-                                            <td>
-                                                <span class="status-indicator" data-server="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>">
-                                                    <span class="status-dot"></span>
-                                                    <span class="status-text">Checking...</span>
-                                                </span>
-                                            </td>
-                                            <td><?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?></td>
-                                            <td><?php echo htmlspecialchars($vhost['documentRoot'] ?? ''); ?></td>
-                                            <td><?php echo htmlspecialchars($vhost['serverAdmin'] ?? ''); ?></td>
-                                            <td><?php echo htmlspecialchars($vhost['serverAlias'] ?? ''); ?></td>
-                                            <td>
-                                                <a href="http://<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
-                                                    class="btn btn-primary btn-sm"
-                                                    target="_blank">Visit</a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 g-4" id="vhostCards">
+                            <?php foreach ($vhosts as $vhost): ?>
+                                <div class="col vhost-item">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-transparent">
+                                            <span class="status-indicator float-end" data-server="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>">
+                                                <span class="status-dot"></span>
+                                                <span class="status-text">Kontrol ediliyor...</span>
+                                            </span>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title" title="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>">
+                                                <?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>
+                                            </h5>
+                                            <div class="card-text">
+                                                <div class="text-info-line">
+                                                    <i class="bi bi-folder"></i> 
+                                                    <span class="text-muted" title="<?php echo htmlspecialchars($vhost['documentRoot'] ?? ''); ?>">
+                                                        <?php echo htmlspecialchars($vhost['documentRoot'] ?? ''); ?>
+                                                    </span>
+                                                </div>
+                                                <?php if (!empty($vhost['serverAlias'])): ?>
+                                                <div class="text-info-line">
+                                                    <i class="bi bi-link-45deg"></i> 
+                                                    <span class="text-muted" title="<?php echo htmlspecialchars($vhost['serverAlias'] ?? ''); ?>">
+                                                        <?php echo htmlspecialchars($vhost['serverAlias'] ?? ''); ?>
+                                                    </span>
+                                                </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-transparent">
+                                            <a href="http://<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
+                                                class="btn btn-primary btn-sm w-100"
+                                                target="_blank">
+                                                <i class="bi bi-box-arrow-up-right"></i> Ziyaret Et
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
