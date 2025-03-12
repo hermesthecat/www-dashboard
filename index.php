@@ -76,6 +76,7 @@ $vhosts = parseVhosts('httpd-vhosts.conf');
                             <table class="table table-striped table-hover" id="vhostTable">
                                 <thead>
                                     <tr>
+                                        <th class="sortable">Status <span class="sort-arrow"></span></th>
                                         <th class="sortable">Server Name <span class="sort-arrow"></span></th>
                                         <th class="sortable">Document Root <span class="sort-arrow"></span></th>
                                         <th class="sortable">Server Admin <span class="sort-arrow"></span></th>
@@ -86,13 +87,19 @@ $vhosts = parseVhosts('httpd-vhosts.conf');
                                 <tbody>
                                     <?php foreach ($vhosts as $vhost): ?>
                                     <tr>
+                                        <td>
+                                            <span class="status-indicator" data-server="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>">
+                                                <span class="status-dot"></span>
+                                                <span class="status-text">Checking...</span>
+                                            </span>
+                                        </td>
                                         <td><?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?></td>
                                         <td><?php echo htmlspecialchars($vhost['documentRoot'] ?? ''); ?></td>
                                         <td><?php echo htmlspecialchars($vhost['serverAdmin'] ?? ''); ?></td>
                                         <td><?php echo htmlspecialchars($vhost['serverAlias'] ?? ''); ?></td>
                                         <td>
-                                            <a href="http://<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>" 
-                                               class="btn btn-primary btn-sm" 
+                                            <a href="http://<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
+                                               class="btn btn-primary btn-sm"
                                                target="_blank">Visit</a>
                                         </td>
                                     </tr>

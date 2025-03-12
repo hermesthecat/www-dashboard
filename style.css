@@ -134,6 +134,72 @@
     background: #555;
 }
 
+/* Status indicators */
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: #6c757d; /* Default gray for checking */
+    transition: background-color 0.3s ease;
+}
+
+.status-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Status states */
+.status-online .status-dot {
+    background-color: #28a745; /* Green for online */
+}
+
+.status-offline .status-dot {
+    background-color: #dc3545; /* Red for offline */
+}
+
+.status-error .status-dot {
+    background-color: #ffc107; /* Yellow for error */
+}
+
+.status-online .status-text {
+    color: #28a745;
+}
+
+.status-offline .status-text {
+    color: #dc3545;
+}
+
+.status-error .status-text {
+    color: #ffc107;
+}
+
+/* Pulse animation for checking state */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.status-checking .status-dot {
+    animation: pulse 1.5s infinite;
+}
+
 /* Animation for row updates */
 .table tbody tr {
     transition: background-color 0.2s ease;
