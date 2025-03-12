@@ -31,10 +31,61 @@
     background-color: #f8f9fa;
     font-weight: 600;
     border-bottom: 2px solid #dee2e6;
+    cursor: pointer;
+    position: relative;
+    padding-right: 25px; /* Space for sort arrow */
 }
 
 .table td {
     vertical-align: middle;
+}
+
+/* Sortable columns */
+.sortable {
+    cursor: pointer;
+    position: relative;
+}
+
+.sortable:hover {
+    background-color: #e9ecef;
+}
+
+/* Sort arrows */
+.sort-arrow {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.sortable.asc .sort-arrow::after {
+    content: "↑";
+    opacity: 0.7;
+}
+
+.sortable.desc .sort-arrow::after {
+    content: "↓";
+    opacity: 0.7;
+}
+
+/* Search input styling */
+#searchInput {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 0.5rem 1rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#searchInput:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    outline: 0;
+}
+
+/* Counter styling */
+#vhostCounter {
+    font-size: 0.875rem;
+    color: #6c757d;
 }
 
 .btn-primary {
@@ -59,6 +110,10 @@
     .table td {
         white-space: nowrap;
     }
+
+    #searchInput {
+        margin-bottom: 1rem;
+    }
 }
 
 /* Custom scrollbar for table */
@@ -77,4 +132,15 @@
 
 .table-responsive::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+/* Animation for row updates */
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+/* Loading state */
+.table.loading {
+    opacity: 0.6;
+    pointer-events: none;
 }

@@ -63,17 +63,23 @@ $vhosts = parseVhosts('httpd-vhosts.conf');
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Virtual Hosts</h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Virtual Hosts</h5>
+                            <div id="vhostCounter" class="text-muted"></div>
+                        </div>
+                        <div class="mt-3">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search virtual hosts...">
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover">
+                            <table class="table table-striped table-hover" id="vhostTable">
                                 <thead>
                                     <tr>
-                                        <th>Server Name</th>
-                                        <th>Document Root</th>
-                                        <th>Server Admin</th>
-                                        <th>Server Alias</th>
+                                        <th class="sortable">Server Name <span class="sort-arrow"></span></th>
+                                        <th class="sortable">Document Root <span class="sort-arrow"></span></th>
+                                        <th class="sortable">Server Admin <span class="sort-arrow"></span></th>
+                                        <th class="sortable">Server Alias <span class="sort-arrow"></span></th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -102,5 +108,6 @@ $vhosts = parseVhosts('httpd-vhosts.conf');
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
