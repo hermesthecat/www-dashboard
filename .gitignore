@@ -1,0 +1,25 @@
+memory-bank/
+projectBrief.md
+
+.specstory/
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.env.local
+.env.prod
+
+.clinerules-debug
+.clinerules-code
+.clinerules-ask
+.clinerules-architect
+.clinerules-test
+.roomodes
+code2prompt.bat
+output.txt
+.cursorrules
+vendor/
+composer.lock
+composer.phar
+.cursor/
