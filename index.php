@@ -1,38 +1,73 @@
 <?php
 // Function to parse vhosts from httpd-vhosts.conf
-function parseVhosts($configFile)
+function parseVhosts($configDir)
 {
     $vhosts = [];
-    $content = file_get_contents($configFile);
 
-    // Regular expression to match VirtualHost blocks
-    preg_match_all('/<VirtualHost.*?>\s*(.*?)\s*<\/VirtualHost>/s', $content, $matches);
+    // Klasördeki tüm .conf dosyalarını alıyorum
+    $confFiles = glob($configDir . '/*.conf');
 
-    foreach ($matches[1] as $vhostBlock) {
-        $vhost = [];
+    foreach ($confFiles as $confFile) {
+        $content = file_get_contents($confFile);
 
-        // Extract ServerName
-        if (preg_match('/ServerName\s+([^\s]+)/', $vhostBlock, $serverName)) {
-            $vhost['serverName'] = $serverName[1];
-        }
+        // Regular expression to match VirtualHost blocks
+        preg_match_all('/<VirtualHost.*?>\s*(.*?)\s*<\/VirtualHost>/s', $content, $matches);
 
-        // Extract ServerAdmin
-        if (preg_match('/ServerAdmin\s+([^\s]+)/', $vhostBlock, $serverAdmin)) {
-            $vhost['serverAdmin'] = $serverAdmin[1];
-        }
+        foreach ($matches[1] as $vhostBlock) {
+            $vhost = [];
 
-        // Extract DocumentRoot
-        if (preg_match('/DocumentRoot\s+([^\s]+)/', $vhostBlock, $docRoot)) {
-            $vhost['documentRoot'] = $docRoot[1];
-        }
+            // Extract ServerName
+            if (preg_match('/ServerName\s+([^\s]+)/', $vhostBlock, $serverName)) {
+                $vhost['serverName'] = $serverName[1];
+            }
 
-        // Extract ServerAlias
-        if (preg_match('/ServerAlias\s+(.+)/', $vhostBlock, $serverAlias)) {
-            $vhost['serverAlias'] = $serverAlias[1];
-        }
+            // Extract ServerAdmin
+            if (preg_match('/ServerAdmin\s+([^\s]+)/', $vhostBlock, $serverAdmin)) {
+                $vhost['serverAdmin'] = $serverAdmin[1];
+            }
 
-        if (!empty($vhost)) {
-            $vhosts[] = $vhost;
+            // Extract DocumentRoot
+            if (preg_match('/DocumentRoot\s+"?([^"\s]+)"?/', $vhostBlock, $docRoot)) {
+                // Değişkenleri çözme işlemi (örneğin ${SITEROOT} gibi)
+                $documentRoot = $docRoot[1];
+                $documentRoot = preg_replace('/\${SITEROOT}/', 'Y:/xampp/htdocs', $documentRoot);
+                $vhost['documentRoot'] = $documentRoot;
+            }
+
+            // Extract ServerAlias
+            if (preg_match('/ServerAlias\s+(.+)/', $vhostBlock, $serverAlias)) {
+                $vhost['serverAlias'] = $serverAlias[1];
+            }
+
+            // Extract SSL info
+            $vhost['ssl'] = preg_match('/SSLEngine\s+on/i', $vhostBlock) ? true : false;
+
+            // Extract PHP version handler
+            if (preg_match('/SetHandler\s+application\/x-httpd-php(\d+)/i', $vhostBlock, $phpVersion)) {
+                $vhost['phpVersion'] = $phpVersion[1];
+            }
+
+            // Dosya adını da vhost bilgisine ekle
+            $vhost['confFile'] = basename($confFile);
+
+            if (!empty($vhost) && !empty($vhost['serverName'])) {
+                // Aynı sunucu adı için hem HTTP hem HTTPS varsa birleştir
+                $serverNameExists = false;
+                foreach ($vhosts as $key => $existingVhost) {
+                    if ($existingVhost['serverName'] === $vhost['serverName']) {
+                        $serverNameExists = true;
+                        // SSL bilgisini güncelle
+                        if ($vhost['ssl']) {
+                            $vhosts[$key]['ssl'] = true;
+                        }
+                        break;
+                    }
+                }
+
+                if (!$serverNameExists) {
+                    $vhosts[] = $vhost;
+                }
+            }
         }
     }
 
@@ -87,7 +122,9 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                                 <div class="col vhost-item">
                                     <div class="card h-100">
                                         <div class="card-header bg-transparent">
-                                            <span class="status-indicator float-end" data-server="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>">
+                                            <span class="status-indicator float-end"
+                                                data-server="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
+                                                data-ssl="<?php echo !empty($vhost['ssl']) && $vhost['ssl'] ? 'true' : 'false'; ?>">
                                                 <span class="status-dot"></span>
                                                 <span class="status-text">Kontrol ediliyor...</span>
                                             </span>
@@ -98,29 +135,53 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                                             </h5>
                                             <div class="card-text">
                                                 <div class="text-info-line">
-                                                    <i class="bi bi-folder"></i> 
+                                                    <i class="bi bi-folder"></i>
                                                     <span class="text-muted" title="<?php echo htmlspecialchars($vhost['documentRoot'] ?? ''); ?>">
                                                         <?php echo htmlspecialchars($vhost['documentRoot'] ?? ''); ?>
                                                     </span>
                                                 </div>
-                                                <?php if (!empty($vhost['serverAlias'])): ?>
-                                                <div class="text-info-line">
-                                                    <i class="bi bi-link-45deg"></i> 
-                                                    <div class="alias-list text-muted">
-                                                        <?php 
-                                                        $aliases = preg_split('/\s+/', trim($vhost['serverAlias']));
-                                                        foreach($aliases as $alias): ?>
-                                                            <div class="alias-item" title="<?php echo htmlspecialchars($alias); ?>">
-                                                                <?php echo htmlspecialchars($alias); ?>
-                                                            </div>
-                                                        <?php endforeach; ?>
+                                                <?php if (!empty($vhost['confFile'])): ?>
+                                                    <div class="text-info-line">
+                                                        <i class="bi bi-file-earmark-code"></i>
+                                                        <span class="text-muted">
+                                                            <?php echo htmlspecialchars($vhost['confFile']); ?>
+                                                        </span>
                                                     </div>
-                                                </div>
+                                                <?php endif; ?>
+                                                <?php if (!empty($vhost['serverAlias'])): ?>
+                                                    <div class="text-info-line">
+                                                        <i class="bi bi-link-45deg"></i>
+                                                        <div class="alias-list text-muted">
+                                                            <?php
+                                                            $aliases = preg_split('/\s+/', trim($vhost['serverAlias']));
+                                                            foreach ($aliases as $alias): ?>
+                                                                <div class="alias-item" title="<?php echo htmlspecialchars($alias); ?>">
+                                                                    <?php echo htmlspecialchars($alias); ?>
+                                                                </div>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                    </div>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
                                         <div class="card-footer bg-transparent">
-                                            <a href="http://<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
+                                            <div class="row mb-2">
+                                                <?php if (!empty($vhost['ssl']) && $vhost['ssl']): ?>
+                                                    <div class="col-auto">
+                                                        <span class="badge bg-success" title="SSL Sertifikası Var">
+                                                            <i class="bi bi-shield-lock"></i> SSL
+                                                        </span>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <?php if (!empty($vhost['phpVersion'])): ?>
+                                                    <div class="col-auto">
+                                                        <span class="badge bg-info" title="PHP Sürümü">
+                                                            <i class="bi bi-filetype-php"></i> PHP <?php echo htmlspecialchars($vhost['phpVersion']); ?>
+                                                        </span>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                            <a href="<?php echo ($vhost['ssl'] ?? false) ? 'https://' : 'http://'; ?><?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
                                                 class="btn btn-primary btn-sm w-100"
                                                 target="_blank">
                                                 <i class="bi bi-box-arrow-up-right"></i> Ziyaret Et

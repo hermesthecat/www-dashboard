@@ -4,9 +4,10 @@ header('Content-Type: application/json');
 // Configuration constants from index.php
 require_once 'config.php';
 
-function checkVhostStatus($url)
+function checkVhostStatus($url, $ssl = false)
 {
-    $ch = curl_init("http://" . $url);
+    $protocol = $ssl ? "https://" : "http://";
+    $ch = curl_init($protocol . $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_NOBODY, true);
     curl_setopt($ch, CURLOPT_TIMEOUT, 5); // 5 seconds timeout
@@ -32,13 +33,15 @@ function checkVhostStatus($url)
         'status' => $httpCode > 0 ? ($httpCode < 400 ? 'online' : 'error') : 'offline',
         'code' => $httpCode,
         'error' => $error,
+        'protocol' => $ssl ? 'https' : 'http',
         'proxy_used' => defined('PROXY_ENABLED') && PROXY_ENABLED
     ];
 }
 
 if (isset($_GET['server'])) {
     $server = filter_var($_GET['server'], FILTER_SANITIZE_URL);
-    echo json_encode(checkVhostStatus($server));
+    $ssl = isset($_GET['ssl']) ? filter_var($_GET['ssl'], FILTER_VALIDATE_BOOLEAN) : false;
+    echo json_encode(checkVhostStatus($server, $ssl));
 } else {
     echo json_encode(['error' => 'No server specified']);
 }

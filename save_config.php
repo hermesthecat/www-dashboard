@@ -34,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $vhostsFile = normalizePath($vhostsFile);
 
-    // Verify file exists or is writable
-    if (!file_exists($vhostsFile) && !is_writable(dirname($vhostsFile))) {
-        die(json_encode(['success' => false, 'message' => 'Invalid vhosts file path or directory not writable']));
+    // Verify directory exists or is writable
+    if (!file_exists($vhostsFile) && !is_dir($vhostsFile) && !is_writable(dirname($vhostsFile))) {
+        die(json_encode(['success' => false, 'message' => 'Invalid vhosts directory path or directory not writable']));
     }
 
     $config .= "// Proxy Configuration\n";

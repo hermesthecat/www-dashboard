@@ -35,13 +35,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Status checking functionality
     function checkStatus(statusIndicator) {
         const server = statusIndicator.dataset.server;
+        const ssl = statusIndicator.dataset.ssl === 'true';
         const dot = statusIndicator.querySelector('.status-dot');
         const text = statusIndicator.querySelector('.status-text');
 
         statusIndicator.classList.add('status-checking');
         text.textContent = 'Checking...';
 
-        fetch(`check_status.php?server=${encodeURIComponent(server)}`)
+        fetch(`check_status.php?server=${encodeURIComponent(server)}&ssl=${ssl}`)
             .then(response => response.json())
             .then(data => {
                 statusIndicator.classList.remove('status-checking');
