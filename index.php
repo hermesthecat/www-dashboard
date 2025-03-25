@@ -167,6 +167,8 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                             <div class="d-flex justify-content-between">
                                                 <div class="btn-group btn-group-sm">
                                                     <button type="button" class="btn btn-primary btn-sm edit-vhost me-2"
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#editVhostModal"
                                                         data-server-name="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
                                                         data-document-root="<?php echo htmlspecialchars(preg_replace('/.*\/([^\/]+)$/', '$1', $vhost['documentRoot'] ?? '')); ?>"
                                                         data-server-alias="<?php echo htmlspecialchars($vhost['serverAlias'] ?? ''); ?>"
@@ -457,7 +459,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                             </div>
                         </div>
                         <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="createDocumentRoot" name="create_document_root" checked>
+                            <input type="checkbox" class="form-check-input" id="createDocumentRoot" name="create_document_root">
                             <label class="form-check-label" for="createDocumentRoot">Belge kök dizini yoksa oluştur</label>
                         </div>
                         <div class="mb-3">
@@ -592,7 +594,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                             </div>
                         </div>
                         <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="editCreateDocumentRoot" name="create_document_root" checked>
+                            <input type="checkbox" class="form-check-input" id="editCreateDocumentRoot" name="create_document_root">
                             <label class="form-check-label" for="editCreateDocumentRoot">Belge kök dizini yoksa oluştur</label>
                         </div>
                         <div class="mb-3">

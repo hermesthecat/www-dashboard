@@ -34,7 +34,50 @@ document.addEventListener('DOMContentLoaded', function () {
     
     const editVhostModal = document.getElementById('editVhostModal');
     if (editVhostModal) {
-        editVhostModal.addEventListener('show.bs.modal', resetEditVhostForm);
+        editVhostModal.addEventListener('show.bs.modal', function(event) {
+            // Önce formu sıfırla
+            resetEditVhostForm();
+            
+            // Tetikleyen butonu bul
+            const button = event.relatedTarget;
+            if (!button || !button.classList.contains('edit-vhost')) {
+                return; // Edit butonu değilse işlemi durdur
+            }
+            
+            // Form verilerini doldur
+            document.getElementById('editServerName').value = button.dataset.serverName || '';
+            document.getElementById('editDocumentRoot').value = button.dataset.documentRoot || '';
+            document.getElementById('editServerAlias').value = button.dataset.serverAlias || '';
+            document.getElementById('editConfFile').value = button.dataset.confFile || '';
+
+            // PHP sürümü seçimini ayarla
+            const phpVersionSelect = document.getElementById('editPhpVersion');
+            const phpVersion = button.dataset.phpVersion || 'Default';
+            if (phpVersionSelect) {
+                for (let i = 0; i < phpVersionSelect.options.length; i++) {
+                    if (phpVersionSelect.options[i].value === phpVersion) {
+                        phpVersionSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            // SSL seçeneğini ayarla
+            const sslEnabled = button.dataset.ssl === 'true';
+            const editEnableSslCheckbox = document.getElementById('editEnableSsl');
+            const editSslSettingsGroup = document.getElementById('editSslSettingsGroup');
+            
+            // Checkbox'ı güncelle
+            if (editEnableSslCheckbox) {
+                editEnableSslCheckbox.checked = sslEnabled;
+            }
+            
+            // SSL ayarlarının görünürlüğünü güncelle
+            if (editSslSettingsGroup) {
+                editSslSettingsGroup.style.display = sslEnabled ? 'block' : 'none';
+            }
+            
+        });
     }
     
     const deleteVhostModal = document.getElementById('deleteVhostModal');
@@ -160,43 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (editButtons.length && editVhostForm) {
-        editButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                // Form verilerini doldur
-                document.getElementById('editServerName').value = this.dataset.serverName;
-                document.getElementById('editDocumentRoot').value = this.dataset.documentRoot;
-                document.getElementById('editServerAlias').value = this.dataset.serverAlias || '';
-                document.getElementById('editConfFile').value = this.dataset.confFile;
-
-                const phpVersionSelect = document.getElementById('editPhpVersion');
-                const phpVersion = this.dataset.phpVersion;
-                for (let i = 0; i < phpVersionSelect.options.length; i++) {
-                    if (phpVersionSelect.options[i].value === phpVersion) {
-                        phpVersionSelect.selectedIndex = i;
-                        break;
-                    }
-                }
-
-                // SSL seçeneğini ayarla
-                const sslEnabled = this.dataset.ssl === 'true';
-                document.getElementById('editEnableSsl').checked = sslEnabled;
-
-                // SSL ayarlarının görünürlüğünü güncelle
-                if (editSslSettingsGroup) {
-                    editSslSettingsGroup.style.display = sslEnabled ? 'block' : 'none';
-                }
-
-                // Belge kök dizini ve index dosyası alanlarını varsayılan olarak işaretle
-                document.getElementById('editCreateDocumentRoot').checked = true;
-                document.getElementById('editIndexFileType').value = 'html';
-
-                // Modalı göster
-                const modal = new bootstrap.Modal(editVhostModal);
-                modal.show();
-            });
-        });
-
-        // Güncelleme butonu işlevselliği
+        // Formdaki update butonu işlevselliği
         if (updateVhostBtn) {
             updateVhostBtn.addEventListener('click', function () {
                 // Form doğrulama kontrolü
@@ -782,7 +789,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             
             // Varsayılan değerleri ayarla
-            document.getElementById('createDocumentRoot').checked = true;
             const phpVersionSelect = document.getElementById('phpVersion');
             if (phpVersionSelect) {
                 phpVersionSelect.selectedIndex = 0;
@@ -807,6 +813,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const phpSettingsBody = document.querySelector('#editPhpSettings .php-settings-body');
             if (phpSettingsBody) {
                 phpSettingsBody.style.display = 'none';
+            }
+            
+            // SSL checkbox işaretini kaldır
+            const editEnableSslCheckbox = document.getElementById('editEnableSsl');
+            if (editEnableSslCheckbox) {
+                editEnableSslCheckbox.checked = false;
             }
             
             // SSL ayarları panelini gizle
