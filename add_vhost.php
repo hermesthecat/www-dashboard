@@ -17,10 +17,10 @@ if (empty($_POST['server_name']) || empty($_POST['document_root'])) {
     ]));
 }
 
-$serverName = filter_var($_POST['server_name'], FILTER_SANITIZE_STRING);
-$documentRoot = filter_var($_POST['document_root'], FILTER_SANITIZE_STRING);
-$serverAlias = filter_var($_POST['server_alias'] ?? '', FILTER_SANITIZE_STRING);
-$phpVersion = filter_var($_POST['php_version'] ?? 'Default', FILTER_SANITIZE_STRING);
+$serverName = htmlspecialchars($_POST['server_name'], ENT_QUOTES, 'UTF-8');
+$documentRoot = htmlspecialchars($_POST['document_root'], ENT_QUOTES, 'UTF-8');
+$serverAlias = !empty($_POST['server_alias']) ? htmlspecialchars($_POST['server_alias'], ENT_QUOTES, 'UTF-8') : '';
+$phpVersion = !empty($_POST['php_version']) ? htmlspecialchars($_POST['php_version'], ENT_QUOTES, 'UTF-8') : 'Default';
 $enableSsl = isset($_POST['enable_ssl']) && $_POST['enable_ssl'] === 'on';
 
 // Dosya adını oluştur

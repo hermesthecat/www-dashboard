@@ -4,7 +4,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Proxy settings
     $proxyEnabled = isset($_POST['proxy_enabled']) ? 'true' : 'false';
-    $proxyAddress = filter_var($_POST['proxy_address'], FILTER_SANITIZE_STRING) ?: '127.0.0.1';
+    $proxyAddress = htmlspecialchars($_POST['proxy_address'] ?? '127.0.0.1', ENT_QUOTES, 'UTF-8');
     $proxyPort = filter_var($_POST['proxy_port'], FILTER_VALIDATE_INT) ?: 8080;
 
     // Path normalization function
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // VHosts file path
-    $vhostsFile = filter_var($_POST['vhosts_file'], FILTER_SANITIZE_STRING) ?: 'httpd-vhosts.conf';
+    $vhostsFile = htmlspecialchars($_POST['vhosts_file'] ?? 'httpd-vhosts.conf', ENT_QUOTES, 'UTF-8');
     if (!str_starts_with($vhostsFile, '/') && !preg_match('~^[A-Z]:~i', $vhostsFile)) {
         // If relative path, make it absolute
         $vhostsFile = __DIR__ . DIRECTORY_SEPARATOR . $vhostsFile;

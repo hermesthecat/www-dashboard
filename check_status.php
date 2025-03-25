@@ -39,7 +39,7 @@ function checkVhostStatus($url, $ssl = false)
 }
 
 if (isset($_GET['server'])) {
-    $server = filter_var($_GET['server'], FILTER_SANITIZE_URL);
+    $server = htmlspecialchars($_GET['server'], ENT_QUOTES, 'UTF-8');
     $ssl = isset($_GET['ssl']) ? filter_var($_GET['ssl'], FILTER_VALIDATE_BOOLEAN) : false;
     echo json_encode(checkVhostStatus($server, $ssl));
 } else {
