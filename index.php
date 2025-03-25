@@ -421,8 +421,8 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                         <div class="mb-3">
                             <label for="indexFileType" class="form-label">Varsayılan index dosyası</label>
                             <select class="form-select" id="indexFileType" name="index_file_type">
-                                <option value="none">Oluşturma</option>
-                                <option value="html" selected>index.html</option>
+                                <option value="none" selected>Oluşturma</option>
+                                <option value="html">index.html</option>
                                 <option value="php">index.php</option>
                             </select>
                             <div class="form-text">
@@ -514,8 +514,8 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                         <div class="mb-3">
                             <label for="editIndexFileType" class="form-label">Varsayılan index dosyası</label>
                             <select class="form-select" id="editIndexFileType" name="index_file_type">
-                                <option value="none">Oluşturma</option>
-                                <option value="html" selected>index.html</option>
+                                <option value="none" selected>Oluşturma</option>
+                                <option value="html">index.html</option>
                                 <option value="php">index.php</option>
                             </select>
                             <div class="form-text">
