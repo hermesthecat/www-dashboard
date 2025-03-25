@@ -33,6 +33,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $vhostsFile = __DIR__ . DIRECTORY_SEPARATOR . $vhostsFile;
     }
     $vhostsFile = normalizePath($vhostsFile);
+    
+    // Site root path
+    $siteRoot = htmlspecialchars($_POST['site_root'] ?? 'Y:/xampp/htdocs', ENT_QUOTES, 'UTF-8');
+    $siteRoot = normalizePath($siteRoot);
+    
+    // Log root path
+    $logRoot = htmlspecialchars($_POST['log_root'] ?? 'Y:/xampp/apache/logs', ENT_QUOTES, 'UTF-8');
+    $logRoot = normalizePath($logRoot);
 
     // Verify directory exists or is writable
     if (!file_exists($vhostsFile) && !is_dir($vhostsFile) && !is_writable(dirname($vhostsFile))) {
@@ -45,6 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $config .= "define('PROXY_PORT', {$proxyPort});\n\n";
     $config .= "// File Path Configuration\n";
     $config .= "define('VHOSTS_FILE', '{$vhostsFile}');\n\n";
+    $config .= "// Site Root Configuration\n";
+    $config .= "define('SITE_ROOT', '{$siteRoot}');\n\n";
+    $config .= "// Log Root Configuration\n";
+    $config .= "define('LOG_ROOT', '{$logRoot}');\n\n";
 
     // Write to config file
     if (file_put_contents('config.php', $config)) {

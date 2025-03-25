@@ -142,6 +142,9 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                                 <button type="button" class="btn btn-outline-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addVhostModal">
                                     <i class="bi bi-plus-circle"></i> Yeni Host
                                 </button>
+                                <button type="button" class="btn btn-outline-info btn-sm me-2" data-bs-toggle="modal" data-bs-target="#logsModal">
+                                    <i class="bi bi-journal-text"></i> Loglar
+                                </button>
                                 <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proxyModal">
                                     <i class="bi bi-gear"></i> Proxy Settings
                                 </button>
@@ -179,7 +182,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                                                     data-server="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
                                                     data-ssl="<?php echo !empty($vhost['ssl']) && $vhost['ssl'] ? 'true' : 'false'; ?>">
                                                     <span class="status-dot"></span>
-                                                    <span class="status-text">Kontrol ediliyor...</span>
+                                                    <span class="status-text">...</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -469,6 +472,88 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
                     <button type="button" id="confirmDeleteVhostBtn" class="btn btn-danger">Sil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logs Modal -->
+    <div class="modal fade" id="logsModal" tabindex="-1" aria-labelledby="logsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logsModalLabel">Log Görüntüleyici</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-3">
+                            <label for="logType" class="form-label">Log Türü</label>
+                            <select class="form-select" id="logType">
+                                <option value="error">Hata Logu</option>
+                                <option value="access">Erişim Logu</option>
+                                <option value="php">PHP Hata Logu</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="serverSelect" class="form-label">Sanal Host</label>
+                            <select class="form-select" id="serverSelect">
+                                <option value="">Genel Apache Logu</option>
+                                <?php foreach ($vhosts as $vhost): ?>
+                                    <option value="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>">
+                                        <?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="logLineCount" class="form-label">Satır Sayısı</label>
+                            <select class="form-select" id="logLineCount">
+                                <option value="50">Son 50 satır</option>
+                                <option value="100" selected>Son 100 satır</option>
+                                <option value="200">Son 200 satır</option>
+                                <option value="500">Son 500 satır</option>
+                                <option value="1000">Son 1000 satır</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Log içinde ara..." id="logSearchInput">
+                                <button class="btn btn-primary" type="button" id="logSearchBtn">
+                                    <i class="bi bi-search"></i> Ara
+                                </button>
+                                <button class="btn btn-outline-secondary" type="button" id="logRefreshBtn">
+                                    <i class="bi bi-arrow-clockwise"></i> Yenile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div id="logLoadingIndicator" class="text-center d-none">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Yükleniyor...</span>
+                                </div>
+                                <p>Log dosyası yükleniyor...</p>
+                            </div>
+                            
+                            <div id="logContent" class="log-viewer">
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle"></i> Log görüntülemek için yukarıdaki seçenekleri belirleyip "Yenile" butonuna tıklayın.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="log-viewer-info small text-muted me-auto">
+                        <span id="logFileInfo"></span>
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
                 </div>
             </div>
         </div>

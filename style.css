@@ -325,3 +325,58 @@
         align-self: flex-end;
     }
 }
+
+/* Log viewer için stiller */
+.log-viewer {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    height: 60vh;
+    overflow-y: auto;
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.log-entry {
+    padding: 2px 4px;
+    margin-bottom: 2px;
+    position: relative;
+    transition: background-color 0.1s;
+}
+
+.log-entry:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.log-entry-info {
+    color: #d4d4d4;
+}
+
+.log-entry-notice {
+    color: #6A9AE5;
+}
+
+.log-entry-warning {
+    color: #dbcb77;
+}
+
+.log-entry-error {
+    color: #F44747;
+}
+
+.log-entry-line-number {
+    color: #858585;
+    user-select: none;
+    display: inline-block;
+    width: 40px;
+    text-align: right;
+    margin-right: 8px;
+}
+
+.log-viewer-info {
+    font-size: 0.8rem;
+}

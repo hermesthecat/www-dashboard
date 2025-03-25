@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const text = statusIndicator.querySelector('.status-text');
 
         statusIndicator.classList.add('status-checking');
-        text.textContent = 'Checking...';
+        text.textContent = '...';
 
         fetch(`check_status.php?server=${encodeURIComponent(server)}&ssl=${ssl}`)
             .then(response => response.json())
@@ -311,6 +311,121 @@ document.addEventListener('DOMContentLoaded', function () {
         ).length;
         const totalCards = cards.length;
         counter.textContent = `${visibleCards} / ${totalCards} sanal host gösteriliyor`;
+    }
+
+    // Log viewer functionality
+    const logModal = document.getElementById('logsModal');
+    const logType = document.getElementById('logType');
+    const serverSelect = document.getElementById('serverSelect');
+    const logLineCount = document.getElementById('logLineCount');
+    const logSearchInput = document.getElementById('logSearchInput');
+    const logSearchBtn = document.getElementById('logSearchBtn');
+    const logRefreshBtn = document.getElementById('logRefreshBtn');
+    const logContent = document.getElementById('logContent');
+    const logLoadingIndicator = document.getElementById('logLoadingIndicator');
+    const logFileInfo = document.getElementById('logFileInfo');
+    
+    if (logRefreshBtn && logContent) {
+        // Log yükleme fonksiyonu
+        function loadLogs() {
+            // Önce loading göster, içeriği gizle
+            logLoadingIndicator.classList.remove('d-none');
+            logContent.innerHTML = '';
+            
+            const formData = new FormData();
+            formData.append('log_type', logType.value);
+            formData.append('server_name', serverSelect.value);
+            formData.append('line_count', logLineCount.value);
+            
+            const searchTerm = logSearchInput.value.trim();
+            if (searchTerm) {
+                formData.append('search_term', searchTerm);
+            }
+            
+            fetch('logs.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                logLoadingIndicator.classList.add('d-none');
+                
+                if (data.success) {
+                    // Dosya bilgisini göster
+                    const searchInfo = searchTerm ? ` (Filtre: "${searchTerm}")` : '';
+                    logFileInfo.textContent = `${data.file} - ${data.count} satır gösteriliyor${searchInfo}`;
+                    
+                    // İçeriği temizle
+                    logContent.innerHTML = '';
+                    
+                    if (data.lines.length === 0) {
+                        logContent.innerHTML = '<div class="alert alert-warning"><i class="bi bi-exclamation-triangle"></i> Log dosyası boş veya arama kriterine uygun satır bulunamadı.</div>';
+                        return;
+                    }
+                    
+                    // Her satırı ekle
+                    data.lines.forEach(line => {
+                        const logEntry = document.createElement('div');
+                        logEntry.className = `log-entry log-entry-${line.level}`;
+                        
+                        // Satır numarası ve metin ekleme
+                        logEntry.innerHTML = `<span class="log-entry-line-number">${line.index}</span>${line.text}`;
+                        
+                        // Arama terimi varsa vurgulama
+                        if (searchTerm) {
+                            const highlightedText = logEntry.innerHTML.replace(
+                                new RegExp(searchTerm, 'gi'),
+                                match => `<mark>${match}</mark>`
+                            );
+                            logEntry.innerHTML = highlightedText;
+                        }
+                        
+                        logContent.appendChild(logEntry);
+                    });
+                    
+                    // En alt satıra otomatik scroll
+                    logContent.scrollTop = logContent.scrollHeight;
+                    
+                } else {
+                    // Hata mesajı göster
+                    logContent.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-circle"></i> ${data.message}</div>`;
+                    logFileInfo.textContent = '';
+                }
+            })
+            .catch(error => {
+                logLoadingIndicator.classList.add('d-none');
+                logContent.innerHTML = '<div class="alert alert-danger"><i class="bi bi-exclamation-circle"></i> Log dosyası yüklenirken bir hata oluştu.</div>';
+                console.error('Error loading logs:', error);
+                logFileInfo.textContent = '';
+            });
+        }
+        
+        // Butonlara olay dinleyicileri ekle
+        logRefreshBtn.addEventListener('click', loadLogs);
+        logSearchBtn.addEventListener('click', loadLogs);
+        
+        // Enter tuşu ile arama
+        logSearchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                loadLogs();
+            }
+        });
+        
+        // Log tipini veya sunucuyu değiştirdiğimizde arama terimini temizle
+        logType.addEventListener('change', function() {
+            logSearchInput.value = '';
+        });
+        
+        serverSelect.addEventListener('change', function() {
+            logSearchInput.value = '';
+        });
+        
+        // Modal açıldığında otomatik olarak yükle
+        if (logModal) {
+            logModal.addEventListener('shown.bs.modal', function () {
+                loadLogs();
+            });
+        }
     }
 
     // Initial counter update
