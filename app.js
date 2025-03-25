@@ -26,6 +26,32 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Modal açılışında formları sıfırlama
+    const addVhostModal = document.getElementById('addVhostModal');
+    if (addVhostModal) {
+        addVhostModal.addEventListener('show.bs.modal', resetAddVhostForm);
+    }
+    
+    const editVhostModal = document.getElementById('editVhostModal');
+    if (editVhostModal) {
+        editVhostModal.addEventListener('show.bs.modal', resetEditVhostForm);
+    }
+    
+    const deleteVhostModal = document.getElementById('deleteVhostModal');
+    if (deleteVhostModal) {
+        deleteVhostModal.addEventListener('show.bs.modal', resetDeleteVhostForm);
+    }
+    
+    const proxyModal = document.getElementById('proxyModal');
+    if (proxyModal) {
+        proxyModal.addEventListener('show.bs.modal', resetProxyForm);
+    }
+    
+    const logsModal = document.getElementById('logsModal');
+    if (logsModal) {
+        logsModal.addEventListener('show.bs.modal', resetLogsForm);
+    }
+
     // Proxy form submission
     const proxyForm = document.getElementById('proxyForm');
     if (proxyForm) {
@@ -122,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Edit VHost form handlers
     const editButtons = document.querySelectorAll('.edit-vhost');
     const editVhostForm = document.getElementById('editVhostForm');
-    const editVhostModal = document.getElementById('editVhostModal');
     const updateVhostBtn = document.getElementById('updateVhostBtn');
     const editEnableSslCheckbox = document.getElementById('editEnableSsl');
     const editSslSettingsGroup = document.getElementById('editSslSettingsGroup');
@@ -223,7 +248,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Delete VHost handlers
     const deleteButtons = document.querySelectorAll('.delete-vhost');
     const deleteVhostForm = document.getElementById('deleteVhostForm');
-    const deleteVhostModal = document.getElementById('deleteVhostModal');
     const confirmDeleteVhostBtn = document.getElementById('confirmDeleteVhostBtn');
 
     if (deleteButtons.length && deleteVhostForm) {
@@ -737,5 +761,127 @@ document.addEventListener('DOMContentLoaded', function () {
         editUsePHPIniSettings.addEventListener('change', function() {
             editPhpSettingsBody.style.display = this.checked ? 'block' : 'none';
         });
+    }
+
+    // Modal formlarının içeriğini sıfırlama fonksiyonları
+    function resetAddVhostForm() {
+        const form = document.getElementById('addVhostForm');
+        if (form) {
+            form.reset();
+            
+            // PHP ayarları panelini gizle
+            const phpSettingsBody = document.querySelector('#phpSettings .php-settings-body');
+            if (phpSettingsBody) {
+                phpSettingsBody.style.display = 'none';
+            }
+            
+            // SSL ayarları panelini gizle
+            const sslSettingsGroup = document.getElementById('sslSettingsGroup');
+            if (sslSettingsGroup) {
+                sslSettingsGroup.style.display = 'none';
+            }
+            
+            // Varsayılan değerleri ayarla
+            document.getElementById('createDocumentRoot').checked = true;
+            const phpVersionSelect = document.getElementById('phpVersion');
+            if (phpVersionSelect) {
+                phpVersionSelect.selectedIndex = 0;
+            }
+            
+            // Geri bildirim mesaj alanını temizle
+            const feedback = document.getElementById('vhostFormFeedback');
+            if (feedback) {
+                feedback.classList.add('d-none');
+                feedback.classList.remove('alert-success', 'alert-danger');
+                feedback.textContent = '';
+            }
+        }
+    }
+
+    function resetEditVhostForm() {
+        const form = document.getElementById('editVhostForm');
+        if (form) {
+            form.reset();
+            
+            // PHP ayarları panelini gizle
+            const phpSettingsBody = document.querySelector('#editPhpSettings .php-settings-body');
+            if (phpSettingsBody) {
+                phpSettingsBody.style.display = 'none';
+            }
+            
+            // SSL ayarları panelini gizle
+            const sslSettingsGroup = document.getElementById('editSslSettingsGroup');
+            if (sslSettingsGroup) {
+                sslSettingsGroup.style.display = 'none';
+            }
+            
+            // Geri bildirim mesaj alanını temizle
+            const feedback = document.getElementById('editVhostFormFeedback');
+            if (feedback) {
+                feedback.classList.add('d-none');
+                feedback.classList.remove('alert-success', 'alert-danger');
+                feedback.textContent = '';
+            }
+        }
+    }
+
+    function resetDeleteVhostForm() {
+        const form = document.getElementById('deleteVhostForm');
+        if (form) {
+            form.reset();
+            
+            // Geri bildirim mesaj alanını temizle
+            const feedback = document.getElementById('deleteVhostFormFeedback');
+            if (feedback) {
+                feedback.classList.add('d-none');
+                feedback.classList.remove('alert-success', 'alert-danger');
+                feedback.textContent = '';
+            }
+        }
+    }
+
+    function resetProxyForm() {
+        const form = document.getElementById('proxyForm');
+        if (form) {
+            // Form değerlerini sıfırlama yerine, ayarların değişmemesi için sıfırlamıyoruz
+            // form.reset();
+            
+            // Tab seçimlerini sıfırla
+            const tabElements = document.querySelectorAll('#settingsTabs .nav-link');
+            tabElements.forEach(tab => {
+                tab.classList.remove('active');
+                tab.setAttribute('aria-selected', 'false');
+            });
+            
+            // İlk tab'ı aktif yap
+            const firstTab = document.querySelector('#settingsTabs .nav-link');
+            if (firstTab) {
+                firstTab.classList.add('active');
+                firstTab.setAttribute('aria-selected', 'true');
+            }
+            
+            // Tab panellerini gizle
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            tabPanes.forEach(pane => {
+                pane.classList.remove('show', 'active');
+            });
+            
+            // İlk tab panelini göster
+            const firstPane = document.querySelector('.tab-pane');
+            if (firstPane) {
+                firstPane.classList.add('show', 'active');
+            }
+        }
+    }
+
+    function resetLogsForm() {
+        // Log tipi ve sunucu seçimi sıfırlama
+        const logType = document.getElementById('logType');
+        const serverSelect = document.getElementById('serverSelect');
+        const logSearchInput = document.getElementById('logSearchInput');
+        
+        if (logType) logType.selectedIndex = 0;
+        if (serverSelect) serverSelect.selectedIndex = 0;
+        if (logSearchInput) logSearchInput.value = '';
     }
 });
