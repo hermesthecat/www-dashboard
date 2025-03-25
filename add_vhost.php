@@ -22,6 +22,146 @@ $documentRoot = htmlspecialchars($_POST['document_root'], ENT_QUOTES, 'UTF-8');
 $serverAlias = !empty($_POST['server_alias']) ? htmlspecialchars($_POST['server_alias'], ENT_QUOTES, 'UTF-8') : '';
 $phpVersion = !empty($_POST['php_version']) ? htmlspecialchars($_POST['php_version'], ENT_QUOTES, 'UTF-8') : 'Default';
 $enableSsl = isset($_POST['enable_ssl']) && $_POST['enable_ssl'] === 'on';
+$createDocumentRoot = isset($_POST['create_document_root']) && $_POST['create_document_root'] === 'on';
+$indexFileType = !empty($_POST['index_file_type']) ? htmlspecialchars($_POST['index_file_type'], ENT_QUOTES, 'UTF-8') : 'none';
+
+// Belge kök dizinini oluştur
+if ($createDocumentRoot) {
+    $fullDocumentRootPath = SITE_ROOT . '/' . $documentRoot;
+    
+    // Dizin oluşturma
+    if (!is_dir($fullDocumentRootPath)) {
+        if (!mkdir($fullDocumentRootPath, 0755, true)) {
+            die(json_encode([
+                'success' => false,
+                'message' => 'Belge kök dizini oluşturulamadı: ' . $fullDocumentRootPath
+            ]));
+        }
+        
+        // İndex dosyası oluşturma
+        if ($indexFileType !== 'none') {
+            $indexFilePath = $fullDocumentRootPath . '/index.' . $indexFileType;
+            $indexContent = '';
+            
+            if ($indexFileType === 'html') {
+                $indexContent = <<<EOT
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{$serverName}</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        h1 {
+            color: #3498db;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        p {
+            font-size: 1.1rem;
+            color: #555;
+        }
+        .info {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 0.8rem 1rem;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>{$serverName}</h1>
+    <p>Bu sanal host {$documentRoot} dizininde bulunmaktadır.</p>
+    <div class="info">
+        <p>Bu sayfa WWW Dashboard tarafından otomatik olarak oluşturulmuştur.</p>
+        <p>Oluşturulma tarihi: " . date('Y-m-d H:i:s') . "</p>
+    </div>
+</body>
+</html>
+EOT;
+            } elseif ($indexFileType === 'php') {
+                $indexContent = <<<EOT
+<?php
+/**
+ * Bu dosya WWW Dashboard tarafından otomatik olarak oluşturulmuştur.
+ * Oluşturulma tarihi: " . date('Y-m-d H:i:s') . "
+ */
+?>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo '{$serverName}'; ?></title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        h1 {
+            color: #3498db;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        p {
+            font-size: 1.1rem;
+            color: #555;
+        }
+        .info {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 0.8rem 1rem;
+            margin: 1.5rem 0;
+        }
+        .php-info {
+            margin-top: 2rem;
+            background-color: #f1f1f1;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1><?php echo '{$serverName}'; ?></h1>
+    <p>Bu sanal host <strong><?php echo '{$documentRoot}'; ?></strong> dizininde bulunmaktadır.</p>
+    
+    <div class="info">
+        <p>Bu sayfa WWW Dashboard tarafından otomatik olarak oluşturulmuştur.</p>
+        <p>Oluşturulma tarihi: <?php echo date('Y-m-d H:i:s'); ?></p>
+    </div>
+    
+    <div class="php-info">
+        <h2>PHP Bilgileri</h2>
+        <p>PHP Sürümü: <?php echo PHP_VERSION; ?></p>
+        <p>Server IP: <?php echo \$_SERVER['SERVER_ADDR']; ?></p>
+        <p>Server Software: <?php echo \$_SERVER['SERVER_SOFTWARE']; ?></p>
+    </div>
+</body>
+</html>
+EOT;
+            }
+            
+            if (!file_put_contents($indexFilePath, $indexContent)) {
+                die(json_encode([
+                    'success' => false,
+                    'message' => 'Index dosyası oluşturulamadı: ' . $indexFilePath
+                ]));
+            }
+        }
+    }
+}
 
 // Dosya adını oluştur
 $fileName = preg_replace('/[^\w\d]/', '_', $serverName) . '.conf';

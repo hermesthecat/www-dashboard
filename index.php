@@ -347,6 +347,21 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                             <input type="checkbox" class="form-check-input" id="enableSsl" name="enable_ssl">
                             <label class="form-check-label" for="enableSsl">SSL Etkinleştir</label>
                         </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="createDocumentRoot" name="create_document_root" checked>
+                            <label class="form-check-label" for="createDocumentRoot">Belge kök dizini yoksa oluştur</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="indexFileType" class="form-label">Varsayılan index dosyası</label>
+                            <select class="form-select" id="indexFileType" name="index_file_type">
+                                <option value="none">Oluşturma</option>
+                                <option value="html" selected>index.html</option>
+                                <option value="php">index.php</option>
+                            </select>
+                            <div class="form-text">
+                                Yeni oluşturulan dizine eklenecek dosya türü
+                            </div>
+                        </div>
                         <div id="vhostFormFeedback" class="alert alert-danger d-none"></div>
                     </form>
                 </div>
@@ -406,6 +421,21 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="editEnableSsl" name="enable_ssl">
                             <label class="form-check-label" for="editEnableSsl">SSL Etkinleştir</label>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="editCreateDocumentRoot" name="create_document_root" checked>
+                            <label class="form-check-label" for="editCreateDocumentRoot">Belge kök dizini yoksa oluştur</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editIndexFileType" class="form-label">Varsayılan index dosyası</label>
+                            <select class="form-select" id="editIndexFileType" name="index_file_type">
+                                <option value="none">Oluşturma</option>
+                                <option value="html" selected>index.html</option>
+                                <option value="php">index.php</option>
+                            </select>
+                            <div class="form-text">
+                                Yeni oluşturulan dizine eklenecek dosya türü
+                            </div>
                         </div>
                         <div id="editVhostFormFeedback" class="alert alert-danger d-none"></div>
                     </form>

@@ -109,6 +109,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 document.getElementById('editEnableSsl').checked = this.dataset.ssl === 'true';
                 
+                // Belge kök dizini ve index dosyası alanlarını varsayılan olarak işaretle
+                document.getElementById('editCreateDocumentRoot').checked = true;
+                document.getElementById('editIndexFileType').value = 'html';
+                
                 // Modalı göster
                 const modal = new bootstrap.Modal(editVhostModal);
                 modal.show();
