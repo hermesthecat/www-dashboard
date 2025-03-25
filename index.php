@@ -45,6 +45,8 @@ function parseVhosts($configDir)
             // Extract PHP version handler
             if (preg_match('/SetHandler\s+application\/x-httpd-php(\d+)/i', $vhostBlock, $phpVersion)) {
                 $vhost['phpVersion'] = $phpVersion[1];
+            } else {
+                $vhost['phpVersion'] = 'Default';
             }
 
             // Dosya adını da vhost bilgisine ekle
