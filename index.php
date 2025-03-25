@@ -174,7 +174,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                                                     </div>
                                                 <?php endif; ?>
                                                 <?php if (!empty($vhost['phpVersion'])): ?>
-                                                    <div class="col-auto">
+                                                    <div class="col-auto ms-auto">
                                                         <span class="badge bg-info" title="PHP Sürümü">
                                                             <i class="bi bi-filetype-php"></i> PHP <?php echo htmlspecialchars($vhost['phpVersion']); ?>
                                                         </span>
