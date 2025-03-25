@@ -58,6 +58,11 @@ if ($usePHPIniSettings) {
     if (isset($_POST['php_error_reporting'])) {
         $phpIniSettings['error_reporting'] = $_POST['php_error_reporting'] === 'on' ? 'E_ALL' : 'E_ALL & ~E_NOTICE & ~E_DEPRECATED';
     }
+
+    if (isset($_POST['php_error_log']) && $_POST['php_error_log'] === 'on') {
+        $phpIniSettings['error_log'] = PHP_ERROR_LOG_FOLDER . '/' . $serverName . '-php_error.log';
+    }
+    
 }
 
 // Belge kök dizinini oluştur

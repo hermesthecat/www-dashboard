@@ -433,6 +433,10 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                     <input type="checkbox" class="form-check-input" id="phpErrorReporting" name="php_error_reporting">
                                     <label class="form-check-label" for="phpErrorReporting">Tüm Hata Tiplerini Raporla</label>
                                 </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="phpErrorLog" name="php_error_log">
+                                    <label class="form-check-label" for="phpErrorLog">Hata Logu Oluştur</label>
+                                </div>
                             </div>
                         </div>
                         
@@ -567,6 +571,10 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                 <div class="mb-3 form-check">
                                     <input type="checkbox" class="form-check-input" id="editPhpErrorReporting" name="php_error_reporting">
                                     <label class="form-check-label" for="editPhpErrorReporting">Tüm Hata Tiplerini Raporla</label>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="editPhpErrorLog" name="php_error_log">
+                                    <label class="form-check-label" for="editPhpErrorLog">Hata Logu Oluştur</label>
                                 </div>
                             </div>
                         </div>
