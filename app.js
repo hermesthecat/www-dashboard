@@ -62,6 +62,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // VHost form submission
     const addVhostForm = document.getElementById('addVhostForm');
     const saveVhostBtn = document.getElementById('saveVhostBtn');
+    const enableSslCheckbox = document.getElementById('enableSsl');
+    const sslSettingsGroup = document.getElementById('sslSettingsGroup');
+
+    // SSL seçeneği işlevselliği
+    if (enableSslCheckbox && sslSettingsGroup) {
+        enableSslCheckbox.addEventListener('change', function() {
+            sslSettingsGroup.style.display = this.checked ? 'block' : 'none';
+        });
+    }
 
     if (addVhostForm && saveVhostBtn) {
         saveVhostBtn.addEventListener('click', function () {
@@ -115,7 +124,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const editVhostForm = document.getElementById('editVhostForm');
     const editVhostModal = document.getElementById('editVhostModal');
     const updateVhostBtn = document.getElementById('updateVhostBtn');
-    
+    const editEnableSslCheckbox = document.getElementById('editEnableSsl');
+    const editSslSettingsGroup = document.getElementById('editSslSettingsGroup');
+
+    // Düzenleme formunda SSL seçeneği işlevselliği
+    if (editEnableSslCheckbox && editSslSettingsGroup) {
+        editEnableSslCheckbox.addEventListener('change', function() {
+            editSslSettingsGroup.style.display = this.checked ? 'block' : 'none';
+        });
+    }
+
     if (editButtons.length && editVhostForm) {
         editButtons.forEach(button => {
             button.addEventListener('click', function() {
@@ -134,7 +152,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
                 
-                document.getElementById('editEnableSsl').checked = this.dataset.ssl === 'true';
+                // SSL seçeneğini ayarla
+                const sslEnabled = this.dataset.ssl === 'true';
+                document.getElementById('editEnableSsl').checked = sslEnabled;
+                
+                // SSL ayarlarının görünürlüğünü güncelle
+                if (editSslSettingsGroup) {
+                    editSslSettingsGroup.style.display = sslEnabled ? 'block' : 'none';
+                }
                 
                 // Belge kök dizini ve index dosyası alanlarını varsayılan olarak işaretle
                 document.getElementById('editCreateDocumentRoot').checked = true;

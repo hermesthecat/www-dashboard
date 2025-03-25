@@ -149,7 +149,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                     <i class="bi bi-bar-chart"></i> İstatistikler
                                 </button>
                                 <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proxyModal">
-                                    <i class="bi bi-gear"></i> Proxy Settings
+                                    <i class="bi bi-gear"></i> Ayarlar
                                 </button>
                             </div>
                             <div id="vhostCounter" class="text-muted"></div>
@@ -396,6 +396,24 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                             <input type="checkbox" class="form-check-input" id="enableSsl" name="enable_ssl">
                             <label class="form-check-label" for="enableSsl">SSL Etkinleştir</label>
                         </div>
+                        <div id="sslSettingsGroup" style="display: none;">
+                            <div class="mb-3">
+                                <label for="sslCertificatePath" class="form-label">SSL Sertifika Dosyası Yolu</label>
+                                <input type="text" class="form-control" id="sslCertificatePath" name="ssl_certificate_path" 
+                                       value="<?= defined('SSL_CERTIFICATE_FILE') ? SSL_CERTIFICATE_FILE : '' ?>">
+                                <div class="form-text">
+                                    Varsayılan sertifika yerine özel bir sertifika yolu belirtmek için.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sslKeyPath" class="form-label">SSL Anahtar Dosyası Yolu</label>
+                                <input type="text" class="form-control" id="sslKeyPath" name="ssl_key_path"
+                                        value="<?= defined('SSL_CERTIFICATE_KEY_FILE') ? SSL_CERTIFICATE_KEY_FILE : '' ?>">
+                                <div class="form-text">
+                                    Varsayılan anahtar dosyası yerine özel bir anahtar dosyası yolu belirtmek için.
+                                </div>
+                            </div>
+                        </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="createDocumentRoot" name="create_document_root" checked>
                             <label class="form-check-label" for="createDocumentRoot">Belge kök dizini yoksa oluştur</label>
@@ -470,6 +488,24 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="editEnableSsl" name="enable_ssl">
                             <label class="form-check-label" for="editEnableSsl">SSL Etkinleştir</label>
+                        </div>
+                        <div id="editSslSettingsGroup" style="display: none;">
+                            <div class="mb-3">
+                                <label for="editSslCertificatePath" class="form-label">SSL Sertifika Dosyası Yolu</label>
+                                <input type="text" class="form-control" id="editSslCertificatePath" name="ssl_certificate_path" 
+                                       value="<?= defined('SSL_CERTIFICATE_FILE') ? SSL_CERTIFICATE_FILE : '' ?>">
+                                <div class="form-text">
+                                    Varsayılan sertifika yerine özel bir sertifika yolu belirtmek için.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editSslKeyPath" class="form-label">SSL Anahtar Dosyası Yolu</label>
+                                <input type="text" class="form-control" id="editSslKeyPath" name="ssl_key_path"
+                                        value="<?= defined('SSL_CERTIFICATE_KEY_FILE') ? SSL_CERTIFICATE_KEY_FILE : '' ?>">
+                                <div class="form-text">
+                                    Varsayılan anahtar dosyası yerine özel bir anahtar dosyası yolu belirtmek için.
+                                </div>
+                            </div>
                         </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="editCreateDocumentRoot" name="create_document_root" checked>

@@ -25,6 +25,10 @@ $enableSsl = isset($_POST['enable_ssl']) && $_POST['enable_ssl'] === 'on';
 $createDocumentRoot = isset($_POST['create_document_root']) && $_POST['create_document_root'] === 'on';
 $indexFileType = !empty($_POST['index_file_type']) ? htmlspecialchars($_POST['index_file_type'], ENT_QUOTES, 'UTF-8') : 'none';
 
+// Özel SSL sertifika yolları
+$sslCertificatePath = !empty($_POST['ssl_certificate_path']) ? htmlspecialchars($_POST['ssl_certificate_path'], ENT_QUOTES, 'UTF-8') : SSL_CERTIFICATE_FILE;
+$sslKeyPath = !empty($_POST['ssl_key_path']) ? htmlspecialchars($_POST['ssl_key_path'], ENT_QUOTES, 'UTF-8') : SSL_CERTIFICATE_KEY_FILE;
+
 // Belge kök dizinini oluştur
 if ($createDocumentRoot) {
     $fullDocumentRootPath = SITE_ROOT . '/' . $documentRoot;
@@ -223,8 +227,6 @@ EOT;
 // SSL bloğunu oluştur (eğer isteniyorsa)
 $sslVhostBlock = '';
 if ($enableSsl) {
-    $certFile = SSL_CERTIFICATE_FILE;
-    $keyFile = SSL_CERTIFICATE_KEY_FILE;
     $sslVhostBlock = <<<EOT
 <VirtualHost *:443>
     DocumentRoot "\${SITEROOT}/{$documentRoot}"
@@ -237,8 +239,8 @@ if ($enableSsl) {
     </Directory>
 {$phpHandler}
     SSLEngine on
-    SSLCertificateFile "{$certFile}"
-    SSLCertificateKeyFile "{$keyFile}"
+    SSLCertificateFile "{$sslCertificatePath}"
+    SSLCertificateKeyFile "{$sslKeyPath}"
 </VirtualHost>
 
 EOT;
