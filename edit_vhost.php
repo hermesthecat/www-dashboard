@@ -231,6 +231,8 @@ EOT;
 // SSL bloğunu oluştur (eğer isteniyorsa)
 $sslVhostBlock = '';
 if ($enableSsl) {
+    $certFile = SSL_CERTIFICATE_FILE;
+    $keyFile = SSL_CERTIFICATE_KEY_FILE;
     $sslVhostBlock = <<<EOT
 <VirtualHost *:443>
     DocumentRoot "\${SITEROOT}/{$documentRoot}"
@@ -243,8 +245,8 @@ if ($enableSsl) {
     </Directory>
 {$phpHandler}
     SSLEngine on
-    SSLCertificateFile "' . SSL_CERTIFICATE_FILE . '"
-    SSLCertificateKeyFile "' . SSL_CERTIFICATE_KEY_FILE . '"
+    SSLCertificateFile "{$certFile}"
+    SSLCertificateKeyFile "{$keyFile}"
 </VirtualHost>
 
 EOT;
