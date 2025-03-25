@@ -259,47 +259,90 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
 
     <!-- Proxy Settings Modal -->
     <div class="modal fade" id="proxyModal" tabindex="-1" aria-labelledby="proxyModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="proxyModalLabel">Proxy Settings</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="proxyModalLabel">Ayarlar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="proxyForm" action="save_config.php" method="post">
-                        <h6 class="mb-3">Proxy Settings</h6>
-                        <div class="mb-3">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="proxyEnabled" name="proxy_enabled" <?php echo defined('PROXY_ENABLED') && PROXY_ENABLED ? 'checked' : ''; ?>>
-                                <label class="form-check-label" for="proxyEnabled">Enable Proxy</label>
+                    <form id="proxyForm">
+                        <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="proxy-tab" data-bs-toggle="tab" data-bs-target="#proxy-tab-pane" type="button" role="tab" aria-controls="proxy-tab-pane" aria-selected="true">Proxy</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="paths-tab" data-bs-toggle="tab" data-bs-target="#paths-tab-pane" type="button" role="tab" aria-controls="paths-tab-pane" aria-selected="false">Dizinler</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="ssl-tab" data-bs-toggle="tab" data-bs-target="#ssl-tab-pane" type="button" role="tab" aria-controls="ssl-tab-pane" aria-selected="false">SSL Sertifikaları</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content mt-3" id="settingsTabContent">
+                            <!-- Proxy Ayarları -->
+                            <div class="tab-pane fade show active" id="proxy-tab-pane" role="tabpanel" aria-labelledby="proxy-tab" tabindex="0">
+                                <h5>Proxy Ayarları</h5>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="proxyEnabled" name="proxy_enabled" <?= defined('PROXY_ENABLED') && PROXY_ENABLED ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="proxyEnabled">Proxy Etkinleştir</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <label for="proxyAddress" class="form-label">Proxy Adresi</label>
+                                        <input type="text" class="form-control" id="proxyAddress" name="proxy_address" value="<?= defined('PROXY_ADDRESS') ? PROXY_ADDRESS : '127.0.0.1' ?>">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="proxyPort" class="form-label">Proxy Port</label>
+                                        <input type="number" class="form-control" id="proxyPort" name="proxy_port" value="<?= defined('PROXY_PORT') ? PROXY_PORT : '8080' ?>">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="proxyAddress" class="form-label">Proxy Address</label>
-                            <input type="text" class="form-control" id="proxyAddress" name="proxy_address"
-                                value="<?php echo defined('PROXY_ADDRESS') ? PROXY_ADDRESS : '127.0.0.1'; ?>">
-                        </div>
-                        <div class="mb-3">
-                            <label for="proxyPort" class="form-label">Proxy Port</label>
-                            <input type="number" class="form-control" id="proxyPort" name="proxy_port"
-                                value="<?php echo defined('PROXY_PORT') ? PROXY_PORT : '8080'; ?>">
-                        </div>
-                        <hr class="my-4">
-                        <h6 class="mb-3">File Path Settings</h6>
-                        <div class="mb-3">
-                            <label for="vhostsFile" class="form-label">VHosts Configuration File</label>
-                            <input type="text" class="form-control" id="vhostsFile" name="vhosts_file"
-                                value="<?php echo defined('VHOSTS_FOLDER') ? str_replace('\\', '/', VHOSTS_FOLDER) : 'httpd-vhosts.conf'; ?>">
-                            <div class="form-text">
-                                Full path to Apache virtual hosts configuration file.<br>
-                                Current file: <code><?php echo defined('VHOSTS_FOLDER') ? str_replace('\\', '/', VHOSTS_FOLDER) : 'Not set'; ?></code>
+                            
+                            <!-- Dizin Ayarları -->
+                            <div class="tab-pane fade" id="paths-tab-pane" role="tabpanel" aria-labelledby="paths-tab" tabindex="0">
+                                <h5>Dizin Ayarları</h5>
+                                <div class="mb-3">
+                                    <label for="vhostsFile" class="form-label">VHosts Dosyası</label>
+                                    <input type="text" class="form-control" id="vhostsFile" name="vhosts_file" value="<?= defined('VHOSTS_FOLDER') ? VHOSTS_FOLDER : '' ?>">
+                                    <div class="form-text">VHosts yapılandırma dosyalarının bulunduğu dizin.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="siteRoot" class="form-label">Site Kök Dizini</label>
+                                    <input type="text" class="form-control" id="siteRoot" name="site_root" value="<?= defined('SITE_ROOT') ? SITE_ROOT : '' ?>">
+                                    <div class="form-text">Web sitelerinin bulunduğu ana dizin.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="logRoot" class="form-label">Log Dizini</label>
+                                    <input type="text" class="form-control" id="logRoot" name="log_root" value="<?= defined('LOG_FOLDER') ? LOG_FOLDER : '' ?>">
+                                    <div class="form-text">Log dosyalarının bulunduğu dizin.</div>
+                                </div>
+                            </div>
+                            
+                            <!-- SSL Sertifika Ayarları -->
+                            <div class="tab-pane fade" id="ssl-tab-pane" role="tabpanel" aria-labelledby="ssl-tab" tabindex="0">
+                                <h5>SSL Sertifika Ayarları</h5>
+                                <div class="mb-3">
+                                    <label for="sslCertRoot" class="form-label">SSL Sertifika Dizini</label>
+                                    <input type="text" class="form-control" id="sslCertRoot" name="ssl_cert_root" value="<?= defined('SSL_CERT_ROOT') ? SSL_CERT_ROOT : '' ?>">
+                                    <div class="form-text">SSL sertifikalarının bulunduğu ana dizin.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="sslCertFile" class="form-label">SSL Sertifika Dosyası</label>
+                                    <input type="text" class="form-control" id="sslCertFile" name="ssl_cert_file" value="<?= defined('SSL_CERTIFICATE_FILE') ? basename(SSL_CERTIFICATE_FILE) : 'local.keremgok.tr-chain.pem' ?>">
+                                    <div class="form-text">SSL sertifika dosyasının adı (sertifika dizinine göre).</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="sslKeyFile" class="form-label">SSL Anahtar Dosyası</label>
+                                    <input type="text" class="form-control" id="sslKeyFile" name="ssl_key_file" value="<?= defined('SSL_CERTIFICATE_KEY_FILE') ? basename(SSL_CERTIFICATE_KEY_FILE) : 'local.keremgok.tr-key.pem' ?>">
+                                    <div class="form-text">SSL özel anahtar dosyasının adı (sertifika dizinine göre).</div>
+                                </div>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" form="proxyForm" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" form="proxyForm" class="btn btn-primary">Kaydet</button>
                 </div>
             </div>
         </div>

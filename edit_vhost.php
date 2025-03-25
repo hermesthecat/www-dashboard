@@ -12,7 +12,7 @@ header('Content-Type: application/json');
 // Temel parametreleri kontrol et
 if (empty($_POST['server_name']) || empty($_POST['document_root']) || empty($_POST['conf_file'])) {
     die(json_encode([
-        'success' => false, 
+        'success' => false,
         'message' => 'Sunucu adı, belge kök dizini ve yapılandırma dosyası gereklidir'
     ]));
 }
@@ -29,7 +29,7 @@ $confFile = htmlspecialchars($_POST['conf_file'], ENT_QUOTES, 'UTF-8');
 // Belge kök dizinini oluştur
 if ($createDocumentRoot) {
     $fullDocumentRootPath = SITE_ROOT . '/' . $documentRoot;
-    
+
     // Dizin oluşturma
     if (!is_dir($fullDocumentRootPath)) {
         if (!mkdir($fullDocumentRootPath, 0755, true)) {
@@ -38,12 +38,12 @@ if ($createDocumentRoot) {
                 'message' => 'Belge kök dizini oluşturulamadı: ' . $fullDocumentRootPath
             ]));
         }
-        
+
         // İndex dosyası oluşturma
         if ($indexFileType !== 'none') {
             $indexFilePath = $fullDocumentRootPath . '/index.' . $indexFileType;
             $indexContent = '';
-            
+
             if ($indexFileType === 'html') {
                 $indexContent = <<<EOT
 <!DOCTYPE html>
@@ -153,7 +153,7 @@ EOT;
 </html>
 EOT;
             }
-            
+
             if (!file_put_contents($indexFilePath, $indexContent)) {
                 die(json_encode([
                     'success' => false,
@@ -203,7 +203,7 @@ if ($phpVersion !== 'Default' && is_numeric($phpVersion)) {
     </FilesMatch>
 EOT;
     } else {
-        // php74, php80 gibi formatlar için
+        // 74, 80 gibi formatlar için
         $phpHandler = <<<EOT
     <FilesMatch "\.php$">
         SetHandler application/x-httpd-php{$phpVersion}-cgi
@@ -243,8 +243,8 @@ if ($enableSsl) {
     </Directory>
 {$phpHandler}
     SSLEngine on
-    SSLCertificateFile "\${CERTROOT}/local.keremgok.tr-chain.pem"
-    SSLCertificateKeyFile "\${CERTROOT}/local.keremgok.tr-key.pem"
+    SSLCertificateFile "' . SSL_CERTIFICATE_FILE . '"
+    SSLCertificateKeyFile "' . SSL_CERTIFICATE_KEY_FILE . '"
 </VirtualHost>
 
 EOT;
@@ -258,7 +258,7 @@ if (!empty($serverAlias)) {
         "ServerName {$serverName}\n    ServerAlias {$serverAlias}",
         $httpVhostBlock
     );
-    
+
     // SSL Alias (eğer SSL etkinse)
     if ($enableSsl) {
         $sslVhostBlock = str_replace(
@@ -291,4 +291,4 @@ if (file_put_contents($filePath, $vhostContent)) {
         'success' => false,
         'message' => 'Sanal host güncellenirken bir hata oluştu'
     ]);
-} 
+}

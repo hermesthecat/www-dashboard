@@ -235,8 +235,8 @@ if ($enableSsl) {
     </Directory>
 {$phpHandler}
     SSLEngine on
-    SSLCertificateFile "\${CERTROOT}/local.keremgok.tr-chain.pem"
-    SSLCertificateKeyFile "\${CERTROOT}/local.keremgok.tr-key.pem"
+    SSLCertificateFile "' . SSL_CERTIFICATE_FILE . '"
+    SSLCertificateKeyFile "' . SSL_CERTIFICATE_KEY_FILE . '"
 </VirtualHost>
 
 EOT;

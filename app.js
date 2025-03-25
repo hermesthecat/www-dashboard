@@ -1,4 +1,31 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Bootstrap tab işlevselliğini etkinleştir
+    const tabElements = document.querySelectorAll('[data-bs-toggle="tab"]');
+    if (tabElements.length > 0) {
+        tabElements.forEach(tab => {
+            tab.addEventListener('click', function(event) {
+                event.preventDefault();
+                const target = document.querySelector(this.getAttribute('data-bs-target'));
+                
+                // Tüm tab panellerini gizle
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('show', 'active');
+                });
+                
+                // Tüm tab butonlarını devre dışı bırak
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    link.setAttribute('aria-selected', 'false');
+                });
+                
+                // Seçilen tab ve paneli aktifleştir
+                this.classList.add('active');
+                this.setAttribute('aria-selected', 'true');
+                target.classList.add('show', 'active');
+            });
+        });
+    }
+
     // Proxy form submission
     const proxyForm = document.getElementById('proxyForm');
     if (proxyForm) {
