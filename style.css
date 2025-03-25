@@ -221,11 +221,6 @@
     max-width: 100%;
 }
 
-.vhost-item .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
 .vhost-item .card-title {
     font-size: 1rem;
     margin-bottom: 1rem;
@@ -305,5 +300,28 @@
 @media (max-width: 576px) {
     .vhost-item {
         margin-bottom: 1rem;
+    }
+}
+
+/* Yeni düzenleme ve silme butonları için stiller */
+.btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* Card header içindeki butonlar ve status için flex düzeni */
+.card-header .d-flex {
+    width: 100%;
+}
+
+/* Mobile uyumluluğu için */
+@media (max-width: 576px) {
+    .card-header .d-flex {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .card-header .status-indicator {
+        align-self: flex-end;
     }
 }

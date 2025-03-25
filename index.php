@@ -158,12 +158,30 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                                 <div class="col vhost-item">
                                     <div class="card h-100">
                                         <div class="card-header bg-transparent">
-                                            <span class="status-indicator float-end"
-                                                data-server="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
-                                                data-ssl="<?php echo !empty($vhost['ssl']) && $vhost['ssl'] ? 'true' : 'false'; ?>">
-                                                <span class="status-dot"></span>
-                                                <span class="status-text">Kontrol ediliyor...</span>
-                                            </span>
+                                            <div class="d-flex justify-content-between">
+                                                <div class="btn-group btn-group-sm">
+                                                    <button type="button" class="btn btn-primary btn-sm edit-vhost me-2" 
+                                                        data-server-name="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
+                                                        data-document-root="<?php echo htmlspecialchars(preg_replace('/.*\/([^\/]+)$/', '$1', $vhost['documentRoot'] ?? '')); ?>"
+                                                        data-server-alias="<?php echo htmlspecialchars($vhost['serverAlias'] ?? ''); ?>"
+                                                        data-php-version="<?php echo htmlspecialchars($vhost['phpVersion'] ?? 'Default'); ?>"
+                                                        data-ssl="<?php echo !empty($vhost['ssl']) && $vhost['ssl'] ? 'true' : 'false'; ?>"
+                                                        data-conf-file="<?php echo htmlspecialchars($vhost['confFile'] ?? ''); ?>">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-sm delete-vhost"
+                                                        data-server-name="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
+                                                        data-conf-file="<?php echo htmlspecialchars($vhost['confFile'] ?? ''); ?>">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                                <span class="status-indicator" 
+                                                    data-server="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
+                                                    data-ssl="<?php echo !empty($vhost['ssl']) && $vhost['ssl'] ? 'true' : 'false'; ?>">
+                                                    <span class="status-dot"></span>
+                                                    <span class="status-text">Kontrol ediliyor...</span>
+                                                </span>
+                                            </div>
                                         </div>
                                         <div class="card-body">
                                             <h5 class="card-title" title="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>">
@@ -335,6 +353,92 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
                     <button type="button" id="saveVhostBtn" class="btn btn-primary">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit VHost Modal -->
+    <div class="modal fade" id="editVhostModal" tabindex="-1" aria-labelledby="editVhostModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editVhostModalLabel">Sanal Host Düzenle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editVhostForm">
+                        <input type="hidden" id="editConfFile" name="conf_file">
+                        <div class="mb-3">
+                            <label for="editServerName" class="form-label">Sunucu Adı</label>
+                            <input type="text" class="form-control" id="editServerName" name="server_name" 
+                                placeholder="ornek.local.keremgok.tr" required>
+                            <div class="form-text">
+                                Sanal hostun tam alan adı
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDocumentRoot" class="form-label">Belge Kök Dizini</label>
+                            <input type="text" class="form-control" id="editDocumentRoot" name="document_root" 
+                                placeholder="ornek" required>
+                            <div class="form-text">
+                                ${SITEROOT} klasörü altındaki dizin adı
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editServerAlias" class="form-label">Sunucu Takma Adları</label>
+                            <input type="text" class="form-control" id="editServerAlias" name="server_alias" 
+                                placeholder="www.ornek.local.keremgok.tr ornek.test">
+                            <div class="form-text">
+                                İsteğe bağlı: Boşlukla ayrılmış alternatif alan adları
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPhpVersion" class="form-label">PHP Sürümü</label>
+                            <select class="form-select" id="editPhpVersion" name="php_version">
+                                <?php foreach ($phpVersions as $version => $name): ?>
+                                    <option value="<?php echo $version; ?>">
+                                        <?php echo $name; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="editEnableSsl" name="enable_ssl">
+                            <label class="form-check-label" for="editEnableSsl">SSL Etkinleştir</label>
+                        </div>
+                        <div id="editVhostFormFeedback" class="alert alert-danger d-none"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" id="updateVhostBtn" class="btn btn-primary">Güncelle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete VHost Confirmation Modal -->
+    <div class="modal fade" id="deleteVhostModal" tabindex="-1" aria-labelledby="deleteVhostModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteVhostModalLabel">Sanal Host Sil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="deleteVhostForm">
+                        <input type="hidden" id="deleteConfFile" name="conf_file">
+                        <input type="hidden" id="deleteServerName" name="server_name">
+                        <p>Aşağıdaki sanal hostu silmek istediğinizden emin misiniz?</p>
+                        <p class="fw-bold" id="deleteVhostName"></p>
+                        <p class="text-danger">Bu işlem geri alınamaz!</p>
+                        <div id="deleteVhostFormFeedback" class="alert alert-danger d-none"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" id="confirmDeleteVhostBtn" class="btn btn-danger">Sil</button>
                 </div>
             </div>
         </div>

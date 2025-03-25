@@ -82,6 +82,153 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         });
     }
+    
+    // Edit VHost form handlers
+    const editButtons = document.querySelectorAll('.edit-vhost');
+    const editVhostForm = document.getElementById('editVhostForm');
+    const editVhostModal = document.getElementById('editVhostModal');
+    const updateVhostBtn = document.getElementById('updateVhostBtn');
+    
+    if (editButtons.length && editVhostForm) {
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Form verilerini doldur
+                document.getElementById('editServerName').value = this.dataset.serverName;
+                document.getElementById('editDocumentRoot').value = this.dataset.documentRoot;
+                document.getElementById('editServerAlias').value = this.dataset.serverAlias || '';
+                document.getElementById('editConfFile').value = this.dataset.confFile;
+                
+                const phpVersionSelect = document.getElementById('editPhpVersion');
+                const phpVersion = this.dataset.phpVersion;
+                for (let i = 0; i < phpVersionSelect.options.length; i++) {
+                    if (phpVersionSelect.options[i].value === phpVersion) {
+                        phpVersionSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+                
+                document.getElementById('editEnableSsl').checked = this.dataset.ssl === 'true';
+                
+                // Modalı göster
+                const modal = new bootstrap.Modal(editVhostModal);
+                modal.show();
+            });
+        });
+        
+        // Güncelleme butonu işlevselliği
+        if (updateVhostBtn) {
+            updateVhostBtn.addEventListener('click', function() {
+                // Form doğrulama kontrolü
+                if (!editVhostForm.checkValidity()) {
+                    editVhostForm.reportValidity();
+                    return;
+                }
+                
+                const formData = new FormData(editVhostForm);
+                const feedback = document.getElementById('editVhostFormFeedback');
+                
+                // Geri bildirim mesaj alanını temizle
+                feedback.classList.add('d-none');
+                feedback.classList.remove('alert-success', 'alert-danger');
+                feedback.textContent = '';
+                
+                // Sanal host güncelleme isteği gönder
+                fetch('edit_vhost.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        feedback.classList.remove('d-none', 'alert-danger');
+                        feedback.classList.add('alert-success');
+                        feedback.textContent = data.message;
+                        
+                        // 2 saniye sonra sayfayı yenile
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        feedback.classList.remove('d-none');
+                        feedback.classList.add('alert-danger');
+                        feedback.textContent = data.message || 'Sanal host güncellenirken bir hata oluştu.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating virtual host:', error);
+                    feedback.classList.remove('d-none');
+                    feedback.classList.add('alert-danger');
+                    feedback.textContent = 'Sunucuyla iletişim hatası.';
+                });
+            });
+        }
+    }
+    
+    // Delete VHost handlers
+    const deleteButtons = document.querySelectorAll('.delete-vhost');
+    const deleteVhostForm = document.getElementById('deleteVhostForm');
+    const deleteVhostModal = document.getElementById('deleteVhostModal');
+    const confirmDeleteVhostBtn = document.getElementById('confirmDeleteVhostBtn');
+    
+    if (deleteButtons.length && deleteVhostForm) {
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const serverName = this.dataset.serverName;
+                const confFile = this.dataset.confFile;
+                
+                // Form verilerini doldur
+                document.getElementById('deleteConfFile').value = confFile;
+                document.getElementById('deleteServerName').value = serverName;
+                document.getElementById('deleteVhostName').textContent = serverName;
+                
+                // Modalı göster
+                const modal = new bootstrap.Modal(deleteVhostModal);
+                modal.show();
+            });
+        });
+        
+        // Silme onay butonu işlevselliği
+        if (confirmDeleteVhostBtn) {
+            confirmDeleteVhostBtn.addEventListener('click', function() {
+                const formData = new FormData(deleteVhostForm);
+                const feedback = document.getElementById('deleteVhostFormFeedback');
+                
+                // Geri bildirim mesaj alanını temizle
+                feedback.classList.add('d-none');
+                feedback.classList.remove('alert-success', 'alert-danger');
+                feedback.textContent = '';
+                
+                // Sanal host silme isteği gönder
+                fetch('delete_vhost.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        feedback.classList.remove('d-none', 'alert-danger');
+                        feedback.classList.add('alert-success');
+                        feedback.textContent = data.message;
+                        
+                        // 2 saniye sonra sayfayı yenile
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        feedback.classList.remove('d-none');
+                        feedback.classList.add('alert-danger');
+                        feedback.textContent = data.message || 'Sanal host silinirken bir hata oluştu.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting virtual host:', error);
+                    feedback.classList.remove('d-none');
+                    feedback.classList.add('alert-danger');
+                    feedback.textContent = 'Sunucuyla iletişim hatası.';
+                });
+            });
+        }
+    }
 
     // Status checking functionality
     function checkStatus(statusIndicator) {
