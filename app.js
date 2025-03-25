@@ -31,6 +31,57 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         });
     }
+    
+    // VHost form submission
+    const addVhostForm = document.getElementById('addVhostForm');
+    const saveVhostBtn = document.getElementById('saveVhostBtn');
+    
+    if (addVhostForm && saveVhostBtn) {
+        saveVhostBtn.addEventListener('click', function() {
+            // Form doğrulama kontrolü
+            if (!addVhostForm.checkValidity()) {
+                addVhostForm.reportValidity();
+                return;
+            }
+            
+            const formData = new FormData(addVhostForm);
+            const feedback = document.getElementById('vhostFormFeedback');
+            
+            // Geri bildirim mesaj alanını temizle
+            feedback.classList.add('d-none');
+            feedback.classList.remove('alert-success', 'alert-danger');
+            feedback.textContent = '';
+            
+            // Sanal host ekleme isteği gönder
+            fetch('add_vhost.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    feedback.classList.remove('d-none', 'alert-danger');
+                    feedback.classList.add('alert-success');
+                    feedback.textContent = data.message;
+                    
+                    // 2 saniye sonra sayfayı yenile
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    feedback.classList.remove('d-none');
+                    feedback.classList.add('alert-danger');
+                    feedback.textContent = data.message || 'Sanal host eklenirken bir hata oluştu.';
+                }
+            })
+            .catch(error => {
+                console.error('Error adding virtual host:', error);
+                feedback.classList.remove('d-none');
+                feedback.classList.add('alert-danger');
+                feedback.textContent = 'Sunucuyla iletişim hatası.';
+            });
+        });
+    }
 
     // Status checking functionality
     function checkStatus(statusIndicator) {

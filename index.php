@@ -109,9 +109,14 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">Virtual Hosts</h5>
-                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proxyModal">
-                                <i class="bi bi-gear"></i> Proxy Settings
-                            </button>
+                            <div>
+                                <button type="button" class="btn btn-outline-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addVhostModal">
+                                    <i class="bi bi-plus-circle"></i> Yeni Host
+                                </button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proxyModal">
+                                    <i class="bi bi-gear"></i> Proxy Settings
+                                </button>
+                            </div>
                             <div id="vhostCounter" class="text-muted"></div>
                         </div>
                         <div class="mt-3">
@@ -242,6 +247,66 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" form="proxyForm" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add VHost Modal -->
+    <div class="modal fade" id="addVhostModal" tabindex="-1" aria-labelledby="addVhostModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addVhostModalLabel">Yeni Sanal Host Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addVhostForm">
+                        <div class="mb-3">
+                            <label for="serverName" class="form-label">Sunucu Adı</label>
+                            <input type="text" class="form-control" id="serverName" name="server_name" 
+                                placeholder="ornek.local.keremgok.tr" required>
+                            <div class="form-text">
+                                Sanal hostun tam alan adı
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="documentRoot" class="form-label">Belge Kök Dizini</label>
+                            <input type="text" class="form-control" id="documentRoot" name="document_root" 
+                                placeholder="ornek" required>
+                            <div class="form-text">
+                                ${SITEROOT} klasörü altındaki dizin adı
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="serverAlias" class="form-label">Sunucu Takma Adları</label>
+                            <input type="text" class="form-control" id="serverAlias" name="server_alias" 
+                                placeholder="www.ornek.local.keremgok.tr ornek.test">
+                            <div class="form-text">
+                                İsteğe bağlı: Boşlukla ayrılmış alternatif alan adları
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phpVersion" class="form-label">PHP Sürümü</label>
+                            <select class="form-select" id="phpVersion" name="php_version">
+                                <option value="Default">Varsayılan</option>
+                                <option value="74">PHP 7.4</option>
+                                <option value="80">PHP 8.0</option>
+                                <option value="81">PHP 8.1</option>
+                                <option value="82">PHP 8.2</option>
+                                <option value="83">PHP 8.3</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="enableSsl" name="enable_ssl">
+                            <label class="form-check-label" for="enableSsl">SSL Etkinleştir</label>
+                        </div>
+                        <div id="vhostFormFeedback" class="alert alert-danger d-none"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" id="saveVhostBtn" class="btn btn-primary">Kaydet</button>
                 </div>
             </div>
         </div>
