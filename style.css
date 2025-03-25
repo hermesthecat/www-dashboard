@@ -380,3 +380,50 @@
 .log-viewer-info {
     font-size: 0.8rem;
 }
+
+/* Stats card stiller */
+.stats-card {
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+}
+
+.stats-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+}
+
+.border-left-primary {
+    border-left: 4px solid #4e73df;
+}
+
+.border-left-success {
+    border-left: 4px solid #1cc88a;
+}
+
+.border-left-info {
+    border-left: 4px solid #36b9cc;
+}
+
+.border-left-warning {
+    border-left: 4px solid #f6c23e;
+}
+
+.text-xs {
+    font-size: .7rem;
+}
+
+.stats-card .progress {
+    height: 0.5rem;
+}
+
+.text-gray-800 {
+    color: #5a5c69;
+}
+
+.font-weight-bold {
+    font-weight: 500;
+}
+
+#statsTabContent {
+    min-height: 300px;
+}

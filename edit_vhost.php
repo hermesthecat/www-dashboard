@@ -165,7 +165,7 @@ EOT;
 }
 
 // Dosya yolunu oluştur
-$filePath = VHOSTS_FILE . '/' . $confFile;
+$filePath = VHOSTS_FOLDER . '/' . $confFile;
 
 // Dosya kontrolü
 if (!file_exists($filePath)) {
@@ -176,10 +176,10 @@ if (!file_exists($filePath)) {
 }
 
 // Dizin kontrolü
-if (!is_dir(VHOSTS_FILE)) {
+if (!is_dir(VHOSTS_FOLDER)) {
     die(json_encode([
-        'success' => false, 
-        'message' => 'VHosts dizini bulunamadı: ' . VHOSTS_FILE
+        'success' => false,
+        'message' => 'VHosts dizini bulunamadı: ' . VHOSTS_FOLDER
     ]));
 }
 

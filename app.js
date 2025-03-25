@@ -428,6 +428,242 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Stats functionality
+    const statsModal = document.getElementById('statsModal');
+    const statsRefreshBtn = document.getElementById('statsRefreshBtn');
+    const statsLoadingIndicator = document.getElementById('statsLoadingIndicator');
+    const statsLastUpdate = document.getElementById('stats-last-update');
+    
+    // İstatistik verilerini yükleme fonksiyonu
+    function loadStats() {
+        statsLoadingIndicator.classList.remove('d-none');
+        
+        // Tüm istatistikleri al
+        fetch('stats.php?action=all_stats')
+            .then(response => response.json())
+            .then(data => {
+                statsLoadingIndicator.classList.add('d-none');
+                updateStatsDisplay(data);
+                
+                // Son güncelleme zamanını göster
+                const now = new Date();
+                statsLastUpdate.textContent = 'Son Güncelleme: ' + 
+                    now.toLocaleDateString('tr-TR') + ' ' + 
+                    now.toLocaleTimeString('tr-TR');
+            })
+            .catch(error => {
+                statsLoadingIndicator.classList.add('d-none');
+                console.error('Error loading stats:', error);
+                alert('İstatistikler yüklenirken bir hata oluştu.');
+            });
+    }
+    
+    // İstatistik verilerini görüntüleme fonksiyonu
+    function updateStatsDisplay(data) {
+        // Sunucu İstatistikleri
+        if (data.server) {
+            const server = data.server;
+            
+            // CPU kullanımı
+            const cpuLoad = document.getElementById('stats-cpu-load');
+            const cpuProgress = document.getElementById('stats-cpu-progress');
+            
+            if (server.cpu) {
+                const loadAvg = server.cpu.load_avg_1;
+                cpuLoad.textContent = loadAvg;
+                
+                // CPU load, 1 değerini %100 olarak kabul edelim (tek çekirdekli CPU için)
+                let cpuPercent = Math.min(loadAvg * 100, 100);
+                cpuProgress.style.width = cpuPercent + '%';
+                cpuProgress.setAttribute('aria-valuenow', cpuPercent);
+                
+                // Renklendirme
+                cpuProgress.classList.remove('bg-success', 'bg-warning', 'bg-danger');
+                if (cpuPercent < 50) {
+                    cpuProgress.classList.add('bg-success');
+                } else if (cpuPercent < 75) {
+                    cpuProgress.classList.add('bg-warning');
+                } else {
+                    cpuProgress.classList.add('bg-danger');
+                }
+            }
+            
+            // Bellek kullanımı
+            const memoryUsed = document.getElementById('stats-memory-used');
+            const memoryProgress = document.getElementById('stats-memory-progress');
+            
+            if (server.memory) {
+                memoryUsed.textContent = server.memory.used + ' MB / ' + server.memory.total + ' MB';
+                
+                const memoryPercent = server.memory.percent_used;
+                memoryProgress.style.width = memoryPercent + '%';
+                memoryProgress.setAttribute('aria-valuenow', memoryPercent);
+                
+                // Renklendirme
+                memoryProgress.classList.remove('bg-success', 'bg-warning', 'bg-danger');
+                if (memoryPercent < 50) {
+                    memoryProgress.classList.add('bg-success');
+                } else if (memoryPercent < 75) {
+                    memoryProgress.classList.add('bg-warning');
+                } else {
+                    memoryProgress.classList.add('bg-danger');
+                }
+            }
+            
+            // Disk kullanımı
+            const diskUsed = document.getElementById('stats-disk-used');
+            const diskProgress = document.getElementById('stats-disk-progress');
+            
+            if (server.disk) {
+                diskUsed.textContent = server.disk.used + ' GB / ' + server.disk.total + ' GB';
+                
+                const diskPercent = server.disk.percent_used;
+                diskProgress.style.width = diskPercent + '%';
+                diskProgress.setAttribute('aria-valuenow', diskPercent);
+                
+                // Renklendirme
+                diskProgress.classList.remove('bg-info', 'bg-warning', 'bg-danger');
+                if (diskPercent < 70) {
+                    diskProgress.classList.add('bg-info');
+                } else if (diskPercent < 90) {
+                    diskProgress.classList.add('bg-warning');
+                } else {
+                    diskProgress.classList.add('bg-danger');
+                }
+            }
+            
+            // Sistem bilgileri
+            if (server.system) {
+                document.getElementById('stats-os').textContent = server.system.os;
+                document.getElementById('stats-server-software').textContent = server.system.server_software;
+                document.getElementById('stats-hostname').textContent = server.system.hostname;
+                document.getElementById('stats-uptime-full').textContent = server.system.uptime;
+                document.getElementById('stats-uptime').textContent = 'Uptime: ' + server.system.uptime;
+            }
+            
+            // PHP bilgileri
+            if (server.php) {
+                document.getElementById('stats-php-version').textContent = server.php.version;
+                document.getElementById('stats-php-memory-limit').textContent = server.php.memory_limit;
+                document.getElementById('stats-php-max-execution-time').textContent = server.php.max_execution_time + ' saniye';
+                document.getElementById('stats-php-upload-max-filesize').textContent = server.php.upload_max_filesize;
+            }
+        }
+        
+        // Bağlantı bilgileri
+        if (data.connections) {
+            const connections = data.connections;
+            document.getElementById('stats-connections').textContent = connections.total;
+            document.getElementById('stats-connections-count').textContent = connections.total;
+            
+            // IP tablosu
+            const ipTable = document.getElementById('stats-connections-table').querySelector('tbody');
+            ipTable.innerHTML = '';
+            
+            if (Object.keys(connections.by_ip).length > 0) {
+                for (const [ip, count] of Object.entries(connections.by_ip)) {
+                    const row = document.createElement('tr');
+                    
+                    const ipCell = document.createElement('td');
+                    ipCell.textContent = ip;
+                    
+                    const countCell = document.createElement('td');
+                    countCell.textContent = count;
+                    
+                    row.appendChild(ipCell);
+                    row.appendChild(countCell);
+                    ipTable.appendChild(row);
+                }
+            } else {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 2;
+                cell.className = 'text-center';
+                cell.textContent = 'Aktif bağlantı yok.';
+                row.appendChild(cell);
+                ipTable.appendChild(row);
+            }
+        }
+        
+        // Sanal host istatistikleri
+        if (data.vhosts) {
+            const vhosts = data.vhosts;
+            const vhostsTable = document.getElementById('stats-vhosts-table').querySelector('tbody');
+            vhostsTable.innerHTML = '';
+            
+            if (Object.keys(vhosts).length > 0) {
+                for (const [serverName, stats] of Object.entries(vhosts)) {
+                    const row = document.createElement('tr');
+                    
+                    // Sanal host adı
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = serverName;
+                    
+                    // Hit sayısı
+                    const hitsCell = document.createElement('td');
+                    hitsCell.textContent = stats.hits.toLocaleString();
+                    
+                    // Hata sayısı
+                    const errorsCell = document.createElement('td');
+                    errorsCell.textContent = stats.errors.toLocaleString();
+                    
+                    // Son erişim
+                    const lastAccessCell = document.createElement('td');
+                    lastAccessCell.textContent = stats.last_access;
+                    
+                    // Access log boyutu
+                    const accessLogCell = document.createElement('td');
+                    accessLogCell.textContent = formatBytes(stats.access_log_size);
+                    
+                    // Error log boyutu
+                    const errorLogCell = document.createElement('td');
+                    errorLogCell.textContent = formatBytes(stats.error_log_size);
+                    
+                    row.appendChild(nameCell);
+                    row.appendChild(hitsCell);
+                    row.appendChild(errorsCell);
+                    row.appendChild(lastAccessCell);
+                    row.appendChild(accessLogCell);
+                    row.appendChild(errorLogCell);
+                    vhostsTable.appendChild(row);
+                }
+            } else {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 6;
+                cell.className = 'text-center';
+                cell.textContent = 'Sanal host bulunamadı.';
+                row.appendChild(cell);
+                vhostsTable.appendChild(row);
+            }
+        }
+    }
+    
+    // Boyut birimlerini okunaklı formata dönüştüren yardımcı fonksiyon
+    function formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 B';
+        
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+    
+    // Butonlara olay dinleyicileri ekle
+    if (statsRefreshBtn) {
+        statsRefreshBtn.addEventListener('click', loadStats);
+    }
+    
+    // Modal açıldığında otomatik olarak yükle
+    if (statsModal) {
+        statsModal.addEventListener('shown.bs.modal', function () {
+            loadStats();
+        });
+    }
+    
     // Initial counter update
     updateCounter();
 });

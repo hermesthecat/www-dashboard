@@ -12,7 +12,7 @@ header('Content-Type: application/json');
 // Log türü ve log dosyasını kontrol et
 if (empty($_POST['log_type'])) {
     die(json_encode([
-        'success' => false, 
+        'success' => false,
         'message' => 'Log türü belirtilmemiş'
     ]));
 }
@@ -33,13 +33,10 @@ if ($lineCount > 1000) {
 $logFile = '';
 switch ($logType) {
     case 'error':
-        $logFile = $serverName ? LOG_ROOT . '/' . $serverName . '-error.log' : LOG_ROOT . '/error.log';
+        $logFile = $serverName ? LOG_FOLDER . '/' . $serverName . '-error.log' : LOG_FOLDER . '/error.log';
         break;
     case 'access':
-        $logFile = $serverName ? LOG_ROOT . '/' . $serverName . '-access.log' : LOG_ROOT . '/access.log';
-        break;
-    case 'php':
-        $logFile = LOG_ROOT . '/php_error_log';
+        $logFile = $serverName ? LOG_FOLDER . '/' . $serverName . '-access.log' : LOG_FOLDER . '/access.log';
         break;
     default:
         die(json_encode([
@@ -97,7 +94,7 @@ foreach ($lines as $index => $line) {
         'text' => htmlspecialchars($line),
         'level' => 'info'
     );
-    
+
     // Hata logları için renklendirme
     if ($logType === 'error') {
         if (stripos($line, 'error') !== false) {
@@ -108,7 +105,7 @@ foreach ($lines as $index => $line) {
             $lineData['level'] = 'notice';
         }
     }
-    
+
     // Access logları için durum kodu tespiti
     elseif ($logType === 'access') {
         // HTTP durum kodlarını bul (tipik olarak "HTTP/1.1" kısmından sonra)
@@ -123,7 +120,7 @@ foreach ($lines as $index => $line) {
             }
         }
     }
-    
+
     // PHP hata logları için renklendirme
     elseif ($logType === 'php') {
         if (stripos($line, 'fatal') !== false || stripos($line, 'error') !== false) {
@@ -134,7 +131,7 @@ foreach ($lines as $index => $line) {
             $lineData['level'] = 'notice';
         }
     }
-    
+
     $formattedLines[] = $lineData;
 }
 
@@ -148,4 +145,4 @@ echo json_encode([
     'lines' => $formattedLines,
     'count' => count($formattedLines),
     'total' => count($lines)
-]); 
+]);

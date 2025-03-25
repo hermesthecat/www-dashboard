@@ -109,7 +109,7 @@ function getPhpVersions()
 $phpVersions = getPhpVersions();
 
 // Parse vhosts
-$vhosts = parseVhosts(VHOSTS_FILE);
+$vhosts = parseVhosts(VHOSTS_FOLDER);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -145,6 +145,9 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                                 <button type="button" class="btn btn-outline-info btn-sm me-2" data-bs-toggle="modal" data-bs-target="#logsModal">
                                     <i class="bi bi-journal-text"></i> Loglar
                                 </button>
+                                <button type="button" class="btn btn-outline-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#statsModal">
+                                    <i class="bi bi-bar-chart"></i> İstatistikler
+                                </button>
                                 <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#proxyModal">
                                     <i class="bi bi-gear"></i> Proxy Settings
                                 </button>
@@ -163,7 +166,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                                         <div class="card-header bg-transparent">
                                             <div class="d-flex justify-content-between">
                                                 <div class="btn-group btn-group-sm">
-                                                    <button type="button" class="btn btn-primary btn-sm edit-vhost me-2" 
+                                                    <button type="button" class="btn btn-primary btn-sm edit-vhost me-2"
                                                         data-server-name="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
                                                         data-document-root="<?php echo htmlspecialchars(preg_replace('/.*\/([^\/]+)$/', '$1', $vhost['documentRoot'] ?? '')); ?>"
                                                         data-server-alias="<?php echo htmlspecialchars($vhost['serverAlias'] ?? ''); ?>"
@@ -178,7 +181,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </div>
-                                                <span class="status-indicator" 
+                                                <span class="status-indicator"
                                                     data-server="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
                                                     data-ssl="<?php echo !empty($vhost['ssl']) && $vhost['ssl'] ? 'true' : 'false'; ?>">
                                                     <span class="status-dot"></span>
@@ -286,10 +289,10 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                         <div class="mb-3">
                             <label for="vhostsFile" class="form-label">VHosts Configuration File</label>
                             <input type="text" class="form-control" id="vhostsFile" name="vhosts_file"
-                                value="<?php echo defined('VHOSTS_FILE') ? str_replace('\\', '/', VHOSTS_FILE) : 'httpd-vhosts.conf'; ?>">
+                                value="<?php echo defined('VHOSTS_FOLDER') ? str_replace('\\', '/', VHOSTS_FOLDER) : 'httpd-vhosts.conf'; ?>">
                             <div class="form-text">
                                 Full path to Apache virtual hosts configuration file.<br>
-                                Current file: <code><?php echo defined('VHOSTS_FILE') ? str_replace('\\', '/', VHOSTS_FILE) : 'Not set'; ?></code>
+                                Current file: <code><?php echo defined('VHOSTS_FOLDER') ? str_replace('\\', '/', VHOSTS_FOLDER) : 'Not set'; ?></code>
                             </div>
                         </div>
                     </form>
@@ -389,7 +392,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                         <input type="hidden" id="editConfFile" name="conf_file">
                         <div class="mb-3">
                             <label for="editServerName" class="form-label">Sunucu Adı</label>
-                            <input type="text" class="form-control" id="editServerName" name="server_name" 
+                            <input type="text" class="form-control" id="editServerName" name="server_name"
                                 placeholder="ornek.local.keremgok.tr" required>
                             <div class="form-text">
                                 Sanal hostun tam alan adı
@@ -397,7 +400,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                         </div>
                         <div class="mb-3">
                             <label for="editDocumentRoot" class="form-label">Belge Kök Dizini</label>
-                            <input type="text" class="form-control" id="editDocumentRoot" name="document_root" 
+                            <input type="text" class="form-control" id="editDocumentRoot" name="document_root"
                                 placeholder="ornek" required>
                             <div class="form-text">
                                 ${SITEROOT} klasörü altındaki dizin adı
@@ -405,7 +408,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                         </div>
                         <div class="mb-3">
                             <label for="editServerAlias" class="form-label">Sunucu Takma Adları</label>
-                            <input type="text" class="form-control" id="editServerAlias" name="server_alias" 
+                            <input type="text" class="form-control" id="editServerAlias" name="server_alias"
                                 placeholder="www.ornek.local.keremgok.tr ornek.test">
                             <div class="form-text">
                                 İsteğe bağlı: Boşlukla ayrılmış alternatif alan adları
@@ -517,7 +520,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <div class="col-12">
                             <div class="input-group">
@@ -531,7 +534,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-12">
                             <div id="logLoadingIndicator" class="text-center d-none">
@@ -540,7 +543,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                                 </div>
                                 <p>Log dosyası yükleniyor...</p>
                             </div>
-                            
+
                             <div id="logContent" class="log-viewer">
                                 <div class="alert alert-info">
                                     <i class="bi bi-info-circle"></i> Log görüntülemek için yukarıdaki seçenekleri belirleyip "Yenile" butonuna tıklayın.
@@ -553,6 +556,231 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                     <div class="log-viewer-info small text-muted me-auto">
                         <span id="logFileInfo"></span>
                     </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div class="modal fade" id="statsModal" tabindex="-1" aria-labelledby="statsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="statsModalLabel">Sunucu İstatistikleri</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div id="statsLoadingIndicator" class="text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Yükleniyor...</span>
+                                </div>
+                                <p>İstatistikler yükleniyor...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6 col-xl-3 mb-3">
+                            <div class="card stats-card h-100 border-left-primary">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">CPU Kullanımı</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="stats-cpu-load">-</div>
+                                            <div class="mt-2 progress">
+                                                <div id="stats-cpu-progress" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="bi bi-cpu fs-2"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-xl-3 mb-3">
+                            <div class="card stats-card h-100 border-left-success">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Bellek Kullanımı</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="stats-memory-used">-</div>
+                                            <div class="mt-2 progress">
+                                                <div id="stats-memory-progress" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="bi bi-memory fs-2"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-xl-3 mb-3">
+                            <div class="card stats-card h-100 border-left-info">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Disk Kullanımı</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="stats-disk-used">-</div>
+                                            <div class="mt-2 progress">
+                                                <div id="stats-disk-progress" class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="bi bi-hdd fs-2"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-xl-3 mb-3">
+                            <div class="card stats-card h-100 border-left-warning">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Aktif Bağlantılar</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="stats-connections">-</div>
+                                            <div class="small text-muted mt-2" id="stats-uptime">-</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="bi bi-diagram-3 fs-2"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <ul class="nav nav-tabs" id="statsTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="system-tab" data-bs-toggle="tab" data-bs-target="#system" type="button" role="tab" aria-controls="system" aria-selected="true">Sistem Bilgileri</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="vhosts-tab" data-bs-toggle="tab" data-bs-target="#vhosts" type="button" role="tab" aria-controls="vhosts" aria-selected="false">Sanal Host İstatistikleri</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="connections-tab" data-bs-toggle="tab" data-bs-target="#connections" type="button" role="tab" aria-controls="connections" aria-selected="false">Bağlantı Detayları</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content p-3 border border-top-0 rounded-bottom" id="statsTabContent">
+                                <div class="tab-pane fade show active" id="system" role="tabpanel" aria-labelledby="system-tab">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h5 class="mb-3">Sistem Bilgileri</h5>
+                                            <table class="table table-sm">
+                                                <tbody>
+                                                    <tr>
+                                                        <th width="30%">İşletim Sistemi</th>
+                                                        <td id="stats-os">-</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Sunucu Yazılımı</th>
+                                                        <td id="stats-server-software">-</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Bilgisayar Adı</th>
+                                                        <td id="stats-hostname">-</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Çalışma Süresi</th>
+                                                        <td id="stats-uptime-full">-</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h5 class="mb-3">PHP Bilgileri</h5>
+                                            <table class="table table-sm">
+                                                <tbody>
+                                                    <tr>
+                                                        <th width="30%">PHP Sürümü</th>
+                                                        <td id="stats-php-version">-</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Bellek Limiti</th>
+                                                        <td id="stats-php-memory-limit">-</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Çalışma Süresi</th>
+                                                        <td id="stats-php-max-execution-time">-</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Yükleme Limiti</th>
+                                                        <td id="stats-php-upload-max-filesize">-</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="vhosts" role="tabpanel" aria-labelledby="vhosts-tab">
+                                    <table class="table table-sm table-hover" id="stats-vhosts-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="30%">Sanal Host</th>
+                                                <th>Hit</th>
+                                                <th>Hata</th>
+                                                <th>Son Erişim</th>
+                                                <th>Access Log</th>
+                                                <th>Error Log</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="6" class="text-center">Veri yükleniyor...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="connections" role="tabpanel" aria-labelledby="connections-tab">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h5 class="mb-3">Bağlantı Özeti</h5>
+                                            <div class="card mb-3">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                        <span class="h6 mb-0">Toplam Aktif Bağlantı:</span>
+                                                        <span class="badge bg-primary fs-6" id="stats-connections-count">0</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h5 class="mb-3">En Çok Bağlantı Yapan IP'ler</h5>
+                                            <table class="table table-sm table-hover" id="stats-connections-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>IP Adresi</th>
+                                                        <th>Bağlantı Sayısı</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="2" class="text-center">Veri yükleniyor...</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="small text-muted me-auto" id="stats-last-update">Son Güncelleme: -</div>
+                    <button type="button" class="btn btn-outline-primary me-2" id="statsRefreshBtn">
+                        <i class="bi bi-arrow-clockwise"></i> Yenile
+                    </button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
                 </div>
             </div>

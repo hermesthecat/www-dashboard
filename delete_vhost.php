@@ -21,7 +21,7 @@ $confFile = htmlspecialchars($_POST['conf_file'], ENT_QUOTES, 'UTF-8');
 $serverName = !empty($_POST['server_name']) ? htmlspecialchars($_POST['server_name'], ENT_QUOTES, 'UTF-8') : '';
 
 // Dosya yolunu oluştur
-$filePath = VHOSTS_FILE . '/' . $confFile;
+$filePath = VHOSTS_FOLDER . '/' . $confFile;
 
 // Dosya kontrolü
 if (!file_exists($filePath)) {

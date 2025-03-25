@@ -28,7 +28,7 @@ $indexFileType = !empty($_POST['index_file_type']) ? htmlspecialchars($_POST['in
 // Belge kök dizinini oluştur
 if ($createDocumentRoot) {
     $fullDocumentRootPath = SITE_ROOT . '/' . $documentRoot;
-    
+
     // Dizin oluşturma
     if (!is_dir($fullDocumentRootPath)) {
         if (!mkdir($fullDocumentRootPath, 0755, true)) {
@@ -37,12 +37,12 @@ if ($createDocumentRoot) {
                 'message' => 'Belge kök dizini oluşturulamadı: ' . $fullDocumentRootPath
             ]));
         }
-        
+
         // İndex dosyası oluşturma
         if ($indexFileType !== 'none') {
             $indexFilePath = $fullDocumentRootPath . '/index.' . $indexFileType;
             $indexContent = '';
-            
+
             if ($indexFileType === 'html') {
                 $indexContent = <<<EOT
 <!DOCTYPE html>
@@ -152,7 +152,7 @@ EOT;
 </html>
 EOT;
             }
-            
+
             if (!file_put_contents($indexFilePath, $indexContent)) {
                 die(json_encode([
                     'success' => false,
@@ -165,21 +165,21 @@ EOT;
 
 // Dosya adını oluştur
 $fileName = preg_replace('/[^\w\d]/', '_', $serverName) . '.conf';
-$filePath = VHOSTS_FILE . '/' . $fileName;
+$filePath = VHOSTS_FOLDER . '/' . $fileName;
 
 // Dizin kontrolü
-if (!is_dir(VHOSTS_FILE)) {
+if (!is_dir(VHOSTS_FOLDER)) {
     die(json_encode([
         'success' => false,
-        'message' => 'VHosts dizini bulunamadı: ' . VHOSTS_FILE
+        'message' => 'VHosts dizini bulunamadı: ' . VHOSTS_FOLDER
     ]));
 }
 
 // Dosya dizininin yazılabilir olup olmadığını kontrol et
-if (!is_writable(VHOSTS_FILE)) {
+if (!is_writable(VHOSTS_FOLDER)) {
     die(json_encode([
         'success' => false,
-        'message' => 'VHosts dizini yazılabilir değil: ' . VHOSTS_FILE
+        'message' => 'VHosts dizini yazılabilir değil: ' . VHOSTS_FOLDER
     ]));
 }
 
