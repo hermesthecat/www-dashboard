@@ -185,9 +185,17 @@
 
 /* Pulse animation for checking state */
 @keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.4; }
-    100% { opacity: 1; }
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 .status-checking .status-dot {
@@ -208,14 +216,14 @@
 /* New card styles */
 .vhost-item .card {
     transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid rgba(0,0,0,.125);
+    border: 1px solid rgba(0, 0, 0, .125);
     height: auto !important;
     max-width: 100%;
 }
 
 .vhost-item .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .vhost-item .card-title {
@@ -286,11 +294,11 @@
 }
 
 .vhost-item .alias-item:not(:last-child) {
-    border-bottom: 1px dashed rgba(0,0,0,0.1);
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
 }
 
 .vhost-item .alias-item:hover {
-    background-color: rgba(0,0,0,0.02);
+    background-color: rgba(0, 0, 0, 0.02);
 }
 
 /* Responsive adjustments */

@@ -6,4 +6,3 @@ define('PROXY_PORT', 80);
 
 // File Path Configuration
 define('VHOSTS_FILE', 'Y:/xampp/apache/conf/extra/vhosts');
-

@@ -79,6 +79,35 @@ function parseVhosts($configDir)
 // Include configuration
 require_once 'config.php';
 
+// PHP sürüm klasörlerini oku
+function getPhpVersions()
+{
+    $phpVersions = ['Default' => 'Varsayılan'];
+    $multiPhpDir = 'Y:/xampp/multi-php';
+
+    if (is_dir($multiPhpDir)) {
+        $dirs = glob($multiPhpDir . '/php*', GLOB_ONLYDIR);
+        foreach ($dirs as $dir) {
+            $version = basename($dir);
+            // php56, php70 formatından 56, 70 formatına çevir
+            $numericVer = preg_replace('/[^0-9]/', '', $version);
+            // 56, 70 formatını 5.6, 7.0 gibi formata çevir (opsiyonel)
+            if (strlen($numericVer) == 2) {
+                $formattedVer = substr($numericVer, 0, 1) . '.' . substr($numericVer, 1, 1);
+                $phpVersions[$numericVer] = 'PHP ' . $formattedVer;
+            } elseif (strlen($numericVer) == 3) {
+                // 74, 80, 81 gibi format için
+                $formattedVer = substr($numericVer, 0, 1) . '.' . substr($numericVer, 1, 2);
+                $phpVersions[$numericVer] = 'PHP ' . $formattedVer;
+            }
+        }
+    }
+
+    return $phpVersions;
+}
+
+$phpVersions = getPhpVersions();
+
 // Parse vhosts
 $vhosts = parseVhosts(VHOSTS_FILE);
 ?>
@@ -251,7 +280,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
             </div>
         </div>
     </div>
-    
+
     <!-- Add VHost Modal -->
     <div class="modal fade" id="addVhostModal" tabindex="-1" aria-labelledby="addVhostModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -264,7 +293,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                     <form id="addVhostForm">
                         <div class="mb-3">
                             <label for="serverName" class="form-label">Sunucu Adı</label>
-                            <input type="text" class="form-control" id="serverName" name="server_name" 
+                            <input type="text" class="form-control" id="serverName" name="server_name"
                                 placeholder="ornek.local.keremgok.tr" required>
                             <div class="form-text">
                                 Sanal hostun tam alan adı
@@ -272,7 +301,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                         </div>
                         <div class="mb-3">
                             <label for="documentRoot" class="form-label">Belge Kök Dizini</label>
-                            <input type="text" class="form-control" id="documentRoot" name="document_root" 
+                            <input type="text" class="form-control" id="documentRoot" name="document_root"
                                 placeholder="ornek" required>
                             <div class="form-text">
                                 ${SITEROOT} klasörü altındaki dizin adı
@@ -280,7 +309,7 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                         </div>
                         <div class="mb-3">
                             <label for="serverAlias" class="form-label">Sunucu Takma Adları</label>
-                            <input type="text" class="form-control" id="serverAlias" name="server_alias" 
+                            <input type="text" class="form-control" id="serverAlias" name="server_alias"
                                 placeholder="www.ornek.local.keremgok.tr ornek.test">
                             <div class="form-text">
                                 İsteğe bağlı: Boşlukla ayrılmış alternatif alan adları
@@ -289,12 +318,11 @@ $vhosts = parseVhosts(VHOSTS_FILE);
                         <div class="mb-3">
                             <label for="phpVersion" class="form-label">PHP Sürümü</label>
                             <select class="form-select" id="phpVersion" name="php_version">
-                                <option value="Default">Varsayılan</option>
-                                <option value="74">PHP 7.4</option>
-                                <option value="80">PHP 8.0</option>
-                                <option value="81">PHP 8.1</option>
-                                <option value="82">PHP 8.2</option>
-                                <option value="83">PHP 8.3</option>
+                                <?php foreach ($phpVersions as $version => $name): ?>
+                                    <option value="<?php echo $version; ?>">
+                                        <?php echo $name; ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="mb-3 form-check">

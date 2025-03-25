@@ -12,7 +12,7 @@ header('Content-Type: application/json');
 // Temel parametreleri kontrol et
 if (empty($_POST['server_name']) || empty($_POST['document_root'])) {
     die(json_encode([
-        'success' => false, 
+        'success' => false,
         'message' => 'Sunucu adı ve belge kök dizini gereklidir'
     ]));
 }
@@ -30,7 +30,7 @@ $filePath = VHOSTS_FILE . '/' . $fileName;
 // Dizin kontrolü
 if (!is_dir(VHOSTS_FILE)) {
     die(json_encode([
-        'success' => false, 
+        'success' => false,
         'message' => 'VHosts dizini bulunamadı: ' . VHOSTS_FILE
     ]));
 }
@@ -38,7 +38,7 @@ if (!is_dir(VHOSTS_FILE)) {
 // Dosya dizininin yazılabilir olup olmadığını kontrol et
 if (!is_writable(VHOSTS_FILE)) {
     die(json_encode([
-        'success' => false, 
+        'success' => false,
         'message' => 'VHosts dizini yazılabilir değil: ' . VHOSTS_FILE
     ]));
 }
@@ -46,11 +46,22 @@ if (!is_writable(VHOSTS_FILE)) {
 // PHP sürümü handler'ı
 $phpHandler = '';
 if ($phpVersion !== 'Default' && is_numeric($phpVersion)) {
-    $phpHandler = <<<EOT
+    // PHP sürüm formatını belirle (56, 70, 74, 80 gibi)
+    if (strlen($phpVersion) == 2) {
+        // php56, php70 gibi formatlar için
+        $phpHandler = <<<EOT
+    <FilesMatch "\.php$">
+        SetHandler application/x-httpd-php{$phpVersion[0]}{$phpVersion[1]}-cgi
+    </FilesMatch>
+EOT;
+    } else {
+        // php74, php80 gibi formatlar için
+        $phpHandler = <<<EOT
     <FilesMatch "\.php$">
         SetHandler application/x-httpd-php{$phpVersion}-cgi
     </FilesMatch>
 EOT;
+    }
 }
 
 // HTTP bloğunu oluştur
@@ -99,7 +110,7 @@ if (!empty($serverAlias)) {
         "ServerName {$serverName}\n    ServerAlias {$serverAlias}",
         $httpVhostBlock
     );
-    
+
     // SSL Alias (eğer SSL etkinse)
     if ($enableSsl) {
         $sslVhostBlock = str_replace(
@@ -132,4 +143,4 @@ if (file_put_contents($filePath, $vhostContent)) {
         'success' => false,
         'message' => 'Sanal host dosyası oluşturulamadı'
     ]);
-} 
+}
