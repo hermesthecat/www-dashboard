@@ -167,7 +167,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                             <div class="d-flex justify-content-between">
                                                 <div class="btn-group btn-group-sm">
                                                     <button type="button" class="btn btn-primary btn-sm edit-vhost me-2"
-                                                        data-bs-toggle="modal" 
+                                                        data-bs-toggle="modal"
                                                         data-bs-target="#editVhostModal"
                                                         data-server-name="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
                                                         data-document-root="<?php echo htmlspecialchars(preg_replace('/.*\/([^\/]+)$/', '$1', $vhost['documentRoot'] ?? '')); ?>"
@@ -299,7 +299,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Dizin Ayarları -->
                             <div class="tab-pane fade" id="paths-tab-pane" role="tabpanel" aria-labelledby="paths-tab" tabindex="0">
                                 <h5>Dizin Ayarları</h5>
@@ -319,7 +319,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                     <div class="form-text">Log dosyalarının bulunduğu dizin.</div>
                                 </div>
                             </div>
-                            
+
                             <!-- SSL Sertifika Ayarları -->
                             <div class="tab-pane fade" id="ssl-tab-pane" role="tabpanel" aria-labelledby="ssl-tab" tabindex="0">
                                 <h5>SSL Sertifika Ayarları</h5>
@@ -394,7 +394,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        
+
                         <!-- PHP Ayarları Paneli -->
                         <div id="phpSettings" class="card mb-3">
                             <div class="card-header d-flex justify-content-between align-items-center">
@@ -439,7 +439,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="enableSsl" name="enable_ssl">
                             <label class="form-check-label" for="enableSsl">SSL Etkinleştir</label>
@@ -447,8 +447,8 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                         <div id="sslSettingsGroup" style="display: none;">
                             <div class="mb-3">
                                 <label for="sslCertificatePath" class="form-label">SSL Sertifika Dosyası Yolu</label>
-                                <input type="text" class="form-control" id="sslCertificatePath" name="ssl_certificate_path" 
-                                       value="<?= defined('SSL_CERTIFICATE_FILE') ? SSL_CERTIFICATE_FILE : '' ?>">
+                                <input type="text" class="form-control" id="sslCertificatePath" name="ssl_certificate_path"
+                                    value="<?= defined('SSL_CERTIFICATE_FILE') ? SSL_CERTIFICATE_FILE : '' ?>">
                                 <div class="form-text">
                                     Varsayılan sertifika yerine özel bir sertifika yolu belirtmek için.
                                 </div>
@@ -456,7 +456,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                             <div class="mb-3">
                                 <label for="sslKeyPath" class="form-label">SSL Anahtar Dosyası Yolu</label>
                                 <input type="text" class="form-control" id="sslKeyPath" name="ssl_key_path"
-                                        value="<?= defined('SSL_CERTIFICATE_KEY_FILE') ? SSL_CERTIFICATE_KEY_FILE : '' ?>">
+                                    value="<?= defined('SSL_CERTIFICATE_KEY_FILE') ? SSL_CERTIFICATE_KEY_FILE : '' ?>">
                                 <div class="form-text">
                                     Varsayılan anahtar dosyası yerine özel bir anahtar dosyası yolu belirtmek için.
                                 </div>
@@ -533,7 +533,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        
+
                         <!-- PHP Ayarları Paneli (Düzenleme Formu) -->
                         <div id="editPhpSettings" class="card mb-3">
                             <div class="card-header d-flex justify-content-between align-items-center">
@@ -578,7 +578,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="editEnableSsl" name="enable_ssl">
                             <label class="form-check-label" for="editEnableSsl">SSL Etkinleştir</label>
@@ -586,8 +586,8 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                         <div id="editSslSettingsGroup" style="display: none;">
                             <div class="mb-3">
                                 <label for="editSslCertificatePath" class="form-label">SSL Sertifika Dosyası Yolu</label>
-                                <input type="text" class="form-control" id="editSslCertificatePath" name="ssl_certificate_path" 
-                                       value="<?= defined('SSL_CERTIFICATE_FILE') ? SSL_CERTIFICATE_FILE : '' ?>">
+                                <input type="text" class="form-control" id="editSslCertificatePath" name="ssl_certificate_path"
+                                    value="<?= defined('SSL_CERTIFICATE_FILE') ? SSL_CERTIFICATE_FILE : '' ?>">
                                 <div class="form-text">
                                     Varsayılan sertifika yerine özel bir sertifika yolu belirtmek için.
                                 </div>
@@ -595,7 +595,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                             <div class="mb-3">
                                 <label for="editSslKeyPath" class="form-label">SSL Anahtar Dosyası Yolu</label>
                                 <input type="text" class="form-control" id="editSslKeyPath" name="ssl_key_path"
-                                        value="<?= defined('SSL_CERTIFICATE_KEY_FILE') ? SSL_CERTIFICATE_KEY_FILE : '' ?>">
+                                    value="<?= defined('SSL_CERTIFICATE_KEY_FILE') ? SSL_CERTIFICATE_KEY_FILE : '' ?>">
                                 <div class="form-text">
                                     Varsayılan anahtar dosyası yerine özel bir anahtar dosyası yolu belirtmek için.
                                 </div>

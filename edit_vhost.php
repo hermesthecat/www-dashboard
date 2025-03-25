@@ -39,27 +39,27 @@ if ($usePHPIniSettings) {
     if (!empty($_POST['php_memory_limit'])) {
         $phpIniSettings['memory_limit'] = htmlspecialchars($_POST['php_memory_limit'], ENT_QUOTES, 'UTF-8');
     }
-    
+
     if (!empty($_POST['php_max_execution_time'])) {
         $phpIniSettings['max_execution_time'] = (int) $_POST['php_max_execution_time'];
     }
-    
+
     if (!empty($_POST['php_upload_max_filesize'])) {
         $phpIniSettings['upload_max_filesize'] = htmlspecialchars($_POST['php_upload_max_filesize'], ENT_QUOTES, 'UTF-8');
     }
-    
+
     if (!empty($_POST['php_post_max_size'])) {
         $phpIniSettings['post_max_size'] = htmlspecialchars($_POST['php_post_max_size'], ENT_QUOTES, 'UTF-8');
     }
-    
+
     if (isset($_POST['php_display_errors'])) {
         $phpIniSettings['display_errors'] = $_POST['php_display_errors'] === 'on' ? 'On' : 'Off';
     }
-    
+
     if (isset($_POST['php_error_reporting'])) {
         $phpIniSettings['error_reporting'] = $_POST['php_error_reporting'] === 'on' ? 'E_ALL' : 'E_ALL & ~E_NOTICE & ~E_DEPRECATED';
     }
-    
+
     if (isset($_POST['php_error_log']) && $_POST['php_error_log'] === 'on') {
         $phpIniSettings['error_log'] = PHP_ERROR_LOG_FOLDER . '/' . $serverName . '-php_error.log';
     }
@@ -249,15 +249,15 @@ EOT;
     </FilesMatch>
 EOT;
     }
-    
+
     // PHP.ini ayarları eklenmişse
     if ($usePHPIniSettings && !empty($phpIniSettings)) {
         $phpIniDirectives = '';
-        
+
         foreach ($phpIniSettings as $directive => $value) {
             $phpIniDirectives .= "        php_admin_value {$directive} {$value}\n";
         }
-        
+
         // PHP DirectoryMatch bloğu ekle
         $phpHandler .= <<<EOT
 
