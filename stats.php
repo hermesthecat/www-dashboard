@@ -11,13 +11,41 @@ header('Content-Type: application/json');
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'server_stats';
 
+// Windows sistemleri için CPU yükü hesaplama
+function getWindowsCpuLoad() {
+    $cpuLoad = [0, 0, 0]; // Varsayılan değerler
+    
+    $cmd = 'wmic cpu get loadpercentage /value';
+    exec($cmd, $output);
+    
+    if (!empty($output)) {
+        foreach ($output as $line) {
+            if (strpos($line, 'LoadPercentage') !== false) {
+                $loadValue = intval(trim(explode('=', $line)[1]));
+                // CPU yüzdesini 0-1 aralığına dönüştür (1-core için)
+                $loadValue = $loadValue / 100;
+                $cpuLoad = [$loadValue, $loadValue, $loadValue];
+                break;
+            }
+        }
+    }
+    
+    return $cpuLoad;
+}
+
 // Ana istatistik verilerini topla
 function getServerStats()
 {
     $stats = [];
 
     // CPU kullanımı
-    $loadAvg = sys_getloadavg();
+    if (function_exists('sys_getloadavg')) {
+        $loadAvg = sys_getloadavg();
+    } else {
+        // Windows için alternatif yöntem
+        $loadAvg = getWindowsCpuLoad();
+    }
+    
     $stats['cpu'] = [
         'load_avg_1' => round($loadAvg[0], 2),
         'load_avg_5' => round($loadAvg[1], 2),
@@ -260,17 +288,19 @@ function getVhostAccessStats()
 
     // Sanal host listesini al
     $vhosts = [];
-    $vhostsDir = scandir(VHOSTS_FOLDER);
+    if (is_dir(VHOSTS_FOLDER)) {
+        $vhostsDir = scandir(VHOSTS_FOLDER);
 
-    foreach ($vhostsDir as $file) {
-        if (substr($file, -5) === '.conf') {
-            $filePath = VHOSTS_FOLDER . '/' . $file;
-            $content = file_get_contents($filePath);
+        foreach ($vhostsDir as $file) {
+            if (substr($file, -5) === '.conf') {
+                $filePath = VHOSTS_FOLDER . '/' . $file;
+                $content = file_get_contents($filePath);
 
-            // ServerName değerini bul
-            if (preg_match('/ServerName\s+([^\s]+)/i', $content, $matches)) {
-                $serverName = $matches[1];
-                $vhosts[] = ['serverName' => $serverName, 'confFile' => $file];
+                // ServerName değerini bul
+                if (preg_match('/ServerName\s+([^\s]+)/i', $content, $matches)) {
+                    $serverName = $matches[1];
+                    $vhosts[] = ['serverName' => $serverName, 'confFile' => $file];
+                }
             }
         }
     }
