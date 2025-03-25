@@ -29,6 +29,37 @@ $indexFileType = !empty($_POST['index_file_type']) ? htmlspecialchars($_POST['in
 $sslCertificatePath = !empty($_POST['ssl_certificate_path']) ? htmlspecialchars($_POST['ssl_certificate_path'], ENT_QUOTES, 'UTF-8') : SSL_CERTIFICATE_FILE;
 $sslKeyPath = !empty($_POST['ssl_key_path']) ? htmlspecialchars($_POST['ssl_key_path'], ENT_QUOTES, 'UTF-8') : SSL_CERTIFICATE_KEY_FILE;
 
+// PHP.ini özel ayarları
+$usePHPIniSettings = isset($_POST['use_php_ini_settings']) && $_POST['use_php_ini_settings'] === 'on';
+$phpIniSettings = [];
+
+if ($usePHPIniSettings) {
+    // PHP ayarlarını topla
+    if (!empty($_POST['php_memory_limit'])) {
+        $phpIniSettings['memory_limit'] = htmlspecialchars($_POST['php_memory_limit'], ENT_QUOTES, 'UTF-8');
+    }
+    
+    if (!empty($_POST['php_max_execution_time'])) {
+        $phpIniSettings['max_execution_time'] = (int) $_POST['php_max_execution_time'];
+    }
+    
+    if (!empty($_POST['php_upload_max_filesize'])) {
+        $phpIniSettings['upload_max_filesize'] = htmlspecialchars($_POST['php_upload_max_filesize'], ENT_QUOTES, 'UTF-8');
+    }
+    
+    if (!empty($_POST['php_post_max_size'])) {
+        $phpIniSettings['post_max_size'] = htmlspecialchars($_POST['php_post_max_size'], ENT_QUOTES, 'UTF-8');
+    }
+    
+    if (isset($_POST['php_display_errors'])) {
+        $phpIniSettings['display_errors'] = $_POST['php_display_errors'] === 'on' ? 'On' : 'Off';
+    }
+    
+    if (isset($_POST['php_error_reporting'])) {
+        $phpIniSettings['error_reporting'] = $_POST['php_error_reporting'] === 'on' ? 'E_ALL' : 'E_ALL & ~E_NOTICE & ~E_DEPRECATED';
+    }
+}
+
 // Belge kök dizinini oluştur
 if ($createDocumentRoot) {
     $fullDocumentRootPath = SITE_ROOT . '/' . $documentRoot;
@@ -199,11 +230,27 @@ if ($phpVersion !== 'Default' && is_numeric($phpVersion)) {
     </FilesMatch>
 EOT;
     } else {
-        // php74, php80 gibi formatlar için
+        // 74, 80 gibi formatlar için
         $phpHandler = <<<EOT
     <FilesMatch "\.php$">
         SetHandler application/x-httpd-php{$phpVersion}-cgi
     </FilesMatch>
+EOT;
+    }
+    
+    // PHP.ini ayarları eklenmişse
+    if ($usePHPIniSettings && !empty($phpIniSettings)) {
+        $phpIniDirectives = '';
+        
+        foreach ($phpIniSettings as $directive => $value) {
+            $phpIniDirectives .= "        php_admin_value {$directive} {$value}\n";
+        }
+        
+        // PHP DirectoryMatch bloğu ekle
+        $phpHandler .= <<<EOT
+
+    <DirectoryMatch "^\${SITEROOT}/{$documentRoot}/">
+{$phpIniDirectives}    </DirectoryMatch>
 EOT;
     }
 }

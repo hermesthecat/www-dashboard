@@ -392,6 +392,48 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                 <?php endforeach; ?>
                             </select>
                         </div>
+                        
+                        <!-- PHP Ayarları Paneli -->
+                        <div id="phpSettings" class="card mb-3">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">PHP Ayarları</h6>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="usePHPIniSettings" name="use_php_ini_settings">
+                                    <label class="form-check-label" for="usePHPIniSettings">Özel Ayarları Kullan</label>
+                                </div>
+                            </div>
+                            <div class="card-body php-settings-body" style="display: none;">
+                                <div class="mb-3">
+                                    <label for="phpMemoryLimit" class="form-label">Bellek Limiti</label>
+                                    <input type="text" class="form-control" id="phpMemoryLimit" name="php_memory_limit" placeholder="128M">
+                                    <div class="form-text">Örnek: 128M, 256M, 1G</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phpMaxExecutionTime" class="form-label">Maksimum Çalışma Süresi</label>
+                                    <input type="number" class="form-control" id="phpMaxExecutionTime" name="php_max_execution_time" placeholder="30">
+                                    <div class="form-text">Saniye cinsinden</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phpUploadMaxFilesize" class="form-label">Maksimum Dosya Yükleme Boyutu</label>
+                                    <input type="text" class="form-control" id="phpUploadMaxFilesize" name="php_upload_max_filesize" placeholder="8M">
+                                    <div class="form-text">Örnek: 8M, 16M, 1G</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phpPostMaxSize" class="form-label">Maksimum POST Boyutu</label>
+                                    <input type="text" class="form-control" id="phpPostMaxSize" name="php_post_max_size" placeholder="8M">
+                                    <div class="form-text">Örnek: 8M, 16M, 1G</div>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="phpDisplayErrors" name="php_display_errors">
+                                    <label class="form-check-label" for="phpDisplayErrors">Hataları Göster</label>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="phpErrorReporting" name="php_error_reporting">
+                                    <label class="form-check-label" for="phpErrorReporting">Tüm Hata Tiplerini Raporla</label>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="enableSsl" name="enable_ssl">
                             <label class="form-check-label" for="enableSsl">SSL Etkinleştir</label>
@@ -485,6 +527,48 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                 <?php endforeach; ?>
                             </select>
                         </div>
+                        
+                        <!-- PHP Ayarları Paneli (Düzenleme Formu) -->
+                        <div id="editPhpSettings" class="card mb-3">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">PHP Ayarları</h6>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="editUsePHPIniSettings" name="use_php_ini_settings">
+                                    <label class="form-check-label" for="editUsePHPIniSettings">Özel Ayarları Kullan</label>
+                                </div>
+                            </div>
+                            <div class="card-body php-settings-body" style="display: none;">
+                                <div class="mb-3">
+                                    <label for="editPhpMemoryLimit" class="form-label">Bellek Limiti</label>
+                                    <input type="text" class="form-control" id="editPhpMemoryLimit" name="php_memory_limit" placeholder="128M">
+                                    <div class="form-text">Örnek: 128M, 256M, 1G</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editPhpMaxExecutionTime" class="form-label">Maksimum Çalışma Süresi</label>
+                                    <input type="number" class="form-control" id="editPhpMaxExecutionTime" name="php_max_execution_time" placeholder="30">
+                                    <div class="form-text">Saniye cinsinden</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editPhpUploadMaxFilesize" class="form-label">Maksimum Dosya Yükleme Boyutu</label>
+                                    <input type="text" class="form-control" id="editPhpUploadMaxFilesize" name="php_upload_max_filesize" placeholder="8M">
+                                    <div class="form-text">Örnek: 8M, 16M, 1G</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editPhpPostMaxSize" class="form-label">Maksimum POST Boyutu</label>
+                                    <input type="text" class="form-control" id="editPhpPostMaxSize" name="php_post_max_size" placeholder="8M">
+                                    <div class="form-text">Örnek: 8M, 16M, 1G</div>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="editPhpDisplayErrors" name="php_display_errors">
+                                    <label class="form-check-label" for="editPhpDisplayErrors">Hataları Göster</label>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="editPhpErrorReporting" name="php_error_reporting">
+                                    <label class="form-check-label" for="editPhpErrorReporting">Tüm Hata Tiplerini Raporla</label>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="editEnableSsl" name="enable_ssl">
                             <label class="form-check-label" for="editEnableSsl">SSL Etkinleştir</label>

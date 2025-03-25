@@ -51,4 +51,4 @@ if (unlink($filePath)) {
         'success' => false,
         'message' => 'Sanal host silinirken bir hata oluştu'
     ]);
-} 
+}

@@ -320,7 +320,7 @@
         flex-direction: column;
         gap: 0.5rem;
     }
-    
+
     .card-header .status-indicator {
         align-self: flex-end;
     }

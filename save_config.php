@@ -33,19 +33,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $vhostsFile = __DIR__ . DIRECTORY_SEPARATOR . $vhostsFile;
     }
     $vhostsFile = normalizePath($vhostsFile);
-    
+
     // Site root path
     $siteRoot = htmlspecialchars($_POST['site_root'], ENT_QUOTES, 'UTF-8');
     $siteRoot = normalizePath($siteRoot);
-    
+
     // Log root path
     $logRoot = htmlspecialchars($_POST['log_root'], ENT_QUOTES, 'UTF-8');
     $logRoot = normalizePath($logRoot);
-    
+
     // SSL Certificate Configuration
     $sslCertRoot = htmlspecialchars($_POST['ssl_cert_root'], ENT_QUOTES, 'UTF-8');
     $sslCertRoot = normalizePath($sslCertRoot);
-    
+
     $sslCertFile = htmlspecialchars($_POST['ssl_cert_file'], ENT_QUOTES, 'UTF-8');
     $sslKeyFile = htmlspecialchars($_POST['ssl_key_file'], ENT_QUOTES, 'UTF-8');
 
@@ -58,16 +58,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $config .= "define('PROXY_ENABLED', {$proxyEnabled});\n";
     $config .= "define('PROXY_ADDRESS', '{$proxyAddress}');\n";
     $config .= "define('PROXY_PORT', {$proxyPort});\n\n";
-    
+
     $config .= "// Root directory\n";
     $config .= "define('ROOT_DIR', '" . dirname($siteRoot) . "');\n\n";
-    
+
     $config .= "// File Path Configuration\n";
     $config .= "define('VHOSTS_FOLDER', ROOT_DIR . '/apache/conf/extra/vhosts');\n";
     $config .= "define('LOG_FOLDER', ROOT_DIR . '/logs');\n";
     $config .= "define('SITE_ROOT', ROOT_DIR . '/htdocs');\n";
     $config .= "define('PHP_ERROR_LOG_FOLDER', ROOT_DIR . '/logs/php');\n\n";
-    
+
     $config .= "// SSL Certificate Configuration\n";
     $config .= "define('SSL_CERT_ROOT', '{$sslCertRoot}');\n";
     $config .= "define('SSL_CERTIFICATE_FILE', SSL_CERT_ROOT . '/{$sslCertFile}');\n";

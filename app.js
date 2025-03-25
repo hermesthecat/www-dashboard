@@ -3,21 +3,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabElements = document.querySelectorAll('[data-bs-toggle="tab"]');
     if (tabElements.length > 0) {
         tabElements.forEach(tab => {
-            tab.addEventListener('click', function(event) {
+            tab.addEventListener('click', function (event) {
                 event.preventDefault();
                 const target = document.querySelector(this.getAttribute('data-bs-target'));
-                
+
                 // Tüm tab panellerini gizle
                 document.querySelectorAll('.tab-pane').forEach(pane => {
                     pane.classList.remove('show', 'active');
                 });
-                
+
                 // Tüm tab butonlarını devre dışı bırak
                 document.querySelectorAll('.nav-link').forEach(link => {
                     link.classList.remove('active');
                     link.setAttribute('aria-selected', 'false');
                 });
-                
+
                 // Seçilen tab ve paneli aktifleştir
                 this.classList.add('active');
                 this.setAttribute('aria-selected', 'true');
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // SSL seçeneği işlevselliği
     if (enableSslCheckbox && sslSettingsGroup) {
-        enableSslCheckbox.addEventListener('change', function() {
+        enableSslCheckbox.addEventListener('change', function () {
             sslSettingsGroup.style.display = this.checked ? 'block' : 'none';
         });
     }
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         });
     }
-    
+
     // Edit VHost form handlers
     const editButtons = document.querySelectorAll('.edit-vhost');
     const editVhostForm = document.getElementById('editVhostForm');
@@ -129,20 +129,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Düzenleme formunda SSL seçeneği işlevselliği
     if (editEnableSslCheckbox && editSslSettingsGroup) {
-        editEnableSslCheckbox.addEventListener('change', function() {
+        editEnableSslCheckbox.addEventListener('change', function () {
             editSslSettingsGroup.style.display = this.checked ? 'block' : 'none';
         });
     }
 
     if (editButtons.length && editVhostForm) {
         editButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 // Form verilerini doldur
                 document.getElementById('editServerName').value = this.dataset.serverName;
                 document.getElementById('editDocumentRoot').value = this.dataset.documentRoot;
                 document.getElementById('editServerAlias').value = this.dataset.serverAlias || '';
                 document.getElementById('editConfFile').value = this.dataset.confFile;
-                
+
                 const phpVersionSelect = document.getElementById('editPhpVersion');
                 const phpVersion = this.dataset.phpVersion;
                 for (let i = 0; i < phpVersionSelect.options.length; i++) {
@@ -151,137 +151,137 @@ document.addEventListener('DOMContentLoaded', function () {
                         break;
                     }
                 }
-                
+
                 // SSL seçeneğini ayarla
                 const sslEnabled = this.dataset.ssl === 'true';
                 document.getElementById('editEnableSsl').checked = sslEnabled;
-                
+
                 // SSL ayarlarının görünürlüğünü güncelle
                 if (editSslSettingsGroup) {
                     editSslSettingsGroup.style.display = sslEnabled ? 'block' : 'none';
                 }
-                
+
                 // Belge kök dizini ve index dosyası alanlarını varsayılan olarak işaretle
                 document.getElementById('editCreateDocumentRoot').checked = true;
                 document.getElementById('editIndexFileType').value = 'html';
-                
+
                 // Modalı göster
                 const modal = new bootstrap.Modal(editVhostModal);
                 modal.show();
             });
         });
-        
+
         // Güncelleme butonu işlevselliği
         if (updateVhostBtn) {
-            updateVhostBtn.addEventListener('click', function() {
+            updateVhostBtn.addEventListener('click', function () {
                 // Form doğrulama kontrolü
                 if (!editVhostForm.checkValidity()) {
                     editVhostForm.reportValidity();
                     return;
                 }
-                
+
                 const formData = new FormData(editVhostForm);
                 const feedback = document.getElementById('editVhostFormFeedback');
-                
+
                 // Geri bildirim mesaj alanını temizle
                 feedback.classList.add('d-none');
                 feedback.classList.remove('alert-success', 'alert-danger');
                 feedback.textContent = '';
-                
+
                 // Sanal host güncelleme isteği gönder
                 fetch('edit_vhost.php', {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        feedback.classList.remove('d-none', 'alert-danger');
-                        feedback.classList.add('alert-success');
-                        feedback.textContent = data.message;
-                        
-                        // 2 saniye sonra sayfayı yenile
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 2000);
-                    } else {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            feedback.classList.remove('d-none', 'alert-danger');
+                            feedback.classList.add('alert-success');
+                            feedback.textContent = data.message;
+
+                            // 2 saniye sonra sayfayı yenile
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
+                        } else {
+                            feedback.classList.remove('d-none');
+                            feedback.classList.add('alert-danger');
+                            feedback.textContent = data.message || 'Sanal host güncellenirken bir hata oluştu.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error updating virtual host:', error);
                         feedback.classList.remove('d-none');
                         feedback.classList.add('alert-danger');
-                        feedback.textContent = data.message || 'Sanal host güncellenirken bir hata oluştu.';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error updating virtual host:', error);
-                    feedback.classList.remove('d-none');
-                    feedback.classList.add('alert-danger');
-                    feedback.textContent = 'Sunucuyla iletişim hatası.';
-                });
+                        feedback.textContent = 'Sunucuyla iletişim hatası.';
+                    });
             });
         }
     }
-    
+
     // Delete VHost handlers
     const deleteButtons = document.querySelectorAll('.delete-vhost');
     const deleteVhostForm = document.getElementById('deleteVhostForm');
     const deleteVhostModal = document.getElementById('deleteVhostModal');
     const confirmDeleteVhostBtn = document.getElementById('confirmDeleteVhostBtn');
-    
+
     if (deleteButtons.length && deleteVhostForm) {
         deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const serverName = this.dataset.serverName;
                 const confFile = this.dataset.confFile;
-                
+
                 // Form verilerini doldur
                 document.getElementById('deleteConfFile').value = confFile;
                 document.getElementById('deleteServerName').value = serverName;
                 document.getElementById('deleteVhostName').textContent = serverName;
-                
+
                 // Modalı göster
                 const modal = new bootstrap.Modal(deleteVhostModal);
                 modal.show();
             });
         });
-        
+
         // Silme onay butonu işlevselliği
         if (confirmDeleteVhostBtn) {
-            confirmDeleteVhostBtn.addEventListener('click', function() {
+            confirmDeleteVhostBtn.addEventListener('click', function () {
                 const formData = new FormData(deleteVhostForm);
                 const feedback = document.getElementById('deleteVhostFormFeedback');
-                
+
                 // Geri bildirim mesaj alanını temizle
                 feedback.classList.add('d-none');
                 feedback.classList.remove('alert-success', 'alert-danger');
                 feedback.textContent = '';
-                
+
                 // Sanal host silme isteği gönder
                 fetch('delete_vhost.php', {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        feedback.classList.remove('d-none', 'alert-danger');
-                        feedback.classList.add('alert-success');
-                        feedback.textContent = data.message;
-                        
-                        // 2 saniye sonra sayfayı yenile
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 2000);
-                    } else {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            feedback.classList.remove('d-none', 'alert-danger');
+                            feedback.classList.add('alert-success');
+                            feedback.textContent = data.message;
+
+                            // 2 saniye sonra sayfayı yenile
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
+                        } else {
+                            feedback.classList.remove('d-none');
+                            feedback.classList.add('alert-danger');
+                            feedback.textContent = data.message || 'Sanal host silinirken bir hata oluştu.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting virtual host:', error);
                         feedback.classList.remove('d-none');
                         feedback.classList.add('alert-danger');
-                        feedback.textContent = data.message || 'Sanal host silinirken bir hata oluştu.';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error deleting virtual host:', error);
-                    feedback.classList.remove('d-none');
-                    feedback.classList.add('alert-danger');
-                    feedback.textContent = 'Sunucuyla iletişim hatası.';
-                });
+                        feedback.textContent = 'Sunucuyla iletişim hatası.';
+                    });
             });
         }
     }
@@ -376,102 +376,102 @@ document.addEventListener('DOMContentLoaded', function () {
     const logContent = document.getElementById('logContent');
     const logLoadingIndicator = document.getElementById('logLoadingIndicator');
     const logFileInfo = document.getElementById('logFileInfo');
-    
+
     if (logRefreshBtn && logContent) {
         // Log yükleme fonksiyonu
         function loadLogs() {
             // Önce loading göster, içeriği gizle
             logLoadingIndicator.classList.remove('d-none');
             logContent.innerHTML = '';
-            
+
             const formData = new FormData();
             formData.append('log_type', logType.value);
             formData.append('server_name', serverSelect.value);
             formData.append('line_count', logLineCount.value);
-            
+
             const searchTerm = logSearchInput.value.trim();
             if (searchTerm) {
                 formData.append('search_term', searchTerm);
             }
-            
+
             fetch('logs.php', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
-            .then(data => {
-                logLoadingIndicator.classList.add('d-none');
-                
-                if (data.success) {
-                    // Dosya bilgisini göster
-                    const searchInfo = searchTerm ? ` (Filtre: "${searchTerm}")` : '';
-                    logFileInfo.textContent = `${data.file} - ${data.count} satır gösteriliyor${searchInfo}`;
-                    
-                    // İçeriği temizle
-                    logContent.innerHTML = '';
-                    
-                    if (data.lines.length === 0) {
-                        logContent.innerHTML = '<div class="alert alert-warning"><i class="bi bi-exclamation-triangle"></i> Log dosyası boş veya arama kriterine uygun satır bulunamadı.</div>';
-                        return;
-                    }
-                    
-                    // Her satırı ekle
-                    data.lines.forEach(line => {
-                        const logEntry = document.createElement('div');
-                        logEntry.className = `log-entry log-entry-${line.level}`;
-                        
-                        // Satır numarası ve metin ekleme
-                        logEntry.innerHTML = `<span class="log-entry-line-number">${line.index}</span>${line.text}`;
-                        
-                        // Arama terimi varsa vurgulama
-                        if (searchTerm) {
-                            const highlightedText = logEntry.innerHTML.replace(
-                                new RegExp(searchTerm, 'gi'),
-                                match => `<mark>${match}</mark>`
-                            );
-                            logEntry.innerHTML = highlightedText;
+                .then(response => response.json())
+                .then(data => {
+                    logLoadingIndicator.classList.add('d-none');
+
+                    if (data.success) {
+                        // Dosya bilgisini göster
+                        const searchInfo = searchTerm ? ` (Filtre: "${searchTerm}")` : '';
+                        logFileInfo.textContent = `${data.file} - ${data.count} satır gösteriliyor${searchInfo}`;
+
+                        // İçeriği temizle
+                        logContent.innerHTML = '';
+
+                        if (data.lines.length === 0) {
+                            logContent.innerHTML = '<div class="alert alert-warning"><i class="bi bi-exclamation-triangle"></i> Log dosyası boş veya arama kriterine uygun satır bulunamadı.</div>';
+                            return;
                         }
-                        
-                        logContent.appendChild(logEntry);
-                    });
-                    
-                    // En alt satıra otomatik scroll
-                    logContent.scrollTop = logContent.scrollHeight;
-                    
-                } else {
-                    // Hata mesajı göster
-                    logContent.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-circle"></i> ${data.message}</div>`;
+
+                        // Her satırı ekle
+                        data.lines.forEach(line => {
+                            const logEntry = document.createElement('div');
+                            logEntry.className = `log-entry log-entry-${line.level}`;
+
+                            // Satır numarası ve metin ekleme
+                            logEntry.innerHTML = `<span class="log-entry-line-number">${line.index}</span>${line.text}`;
+
+                            // Arama terimi varsa vurgulama
+                            if (searchTerm) {
+                                const highlightedText = logEntry.innerHTML.replace(
+                                    new RegExp(searchTerm, 'gi'),
+                                    match => `<mark>${match}</mark>`
+                                );
+                                logEntry.innerHTML = highlightedText;
+                            }
+
+                            logContent.appendChild(logEntry);
+                        });
+
+                        // En alt satıra otomatik scroll
+                        logContent.scrollTop = logContent.scrollHeight;
+
+                    } else {
+                        // Hata mesajı göster
+                        logContent.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-circle"></i> ${data.message}</div>`;
+                        logFileInfo.textContent = '';
+                    }
+                })
+                .catch(error => {
+                    logLoadingIndicator.classList.add('d-none');
+                    logContent.innerHTML = '<div class="alert alert-danger"><i class="bi bi-exclamation-circle"></i> Log dosyası yüklenirken bir hata oluştu.</div>';
+                    console.error('Error loading logs:', error);
                     logFileInfo.textContent = '';
-                }
-            })
-            .catch(error => {
-                logLoadingIndicator.classList.add('d-none');
-                logContent.innerHTML = '<div class="alert alert-danger"><i class="bi bi-exclamation-circle"></i> Log dosyası yüklenirken bir hata oluştu.</div>';
-                console.error('Error loading logs:', error);
-                logFileInfo.textContent = '';
-            });
+                });
         }
-        
+
         // Butonlara olay dinleyicileri ekle
         logRefreshBtn.addEventListener('click', loadLogs);
         logSearchBtn.addEventListener('click', loadLogs);
-        
+
         // Enter tuşu ile arama
-        logSearchInput.addEventListener('keyup', function(event) {
+        logSearchInput.addEventListener('keyup', function (event) {
             if (event.key === 'Enter') {
                 loadLogs();
             }
         });
-        
+
         // Log tipini veya sunucuyu değiştirdiğimizde arama terimini temizle
-        logType.addEventListener('change', function() {
+        logType.addEventListener('change', function () {
             logSearchInput.value = '';
         });
-        
-        serverSelect.addEventListener('change', function() {
+
+        serverSelect.addEventListener('change', function () {
             logSearchInput.value = '';
         });
-        
+
         // Modal açıldığında otomatik olarak yükle
         if (logModal) {
             logModal.addEventListener('shown.bs.modal', function () {
@@ -485,22 +485,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const statsRefreshBtn = document.getElementById('statsRefreshBtn');
     const statsLoadingIndicator = document.getElementById('statsLoadingIndicator');
     const statsLastUpdate = document.getElementById('stats-last-update');
-    
+
     // İstatistik verilerini yükleme fonksiyonu
     function loadStats() {
         statsLoadingIndicator.classList.remove('d-none');
-        
+
         // Tüm istatistikleri al
         fetch('stats.php?action=all_stats')
             .then(response => response.json())
             .then(data => {
                 statsLoadingIndicator.classList.add('d-none');
                 updateStatsDisplay(data);
-                
+
                 // Son güncelleme zamanını göster
                 const now = new Date();
-                statsLastUpdate.textContent = 'Son Güncelleme: ' + 
-                    now.toLocaleDateString('tr-TR') + ' ' + 
+                statsLastUpdate.textContent = 'Son Güncelleme: ' +
+                    now.toLocaleDateString('tr-TR') + ' ' +
                     now.toLocaleTimeString('tr-TR');
             })
             .catch(error => {
@@ -509,26 +509,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('İstatistikler yüklenirken bir hata oluştu.');
             });
     }
-    
+
     // İstatistik verilerini görüntüleme fonksiyonu
     function updateStatsDisplay(data) {
         // Sunucu İstatistikleri
         if (data.server) {
             const server = data.server;
-            
+
             // CPU kullanımı
             const cpuLoad = document.getElementById('stats-cpu-load');
             const cpuProgress = document.getElementById('stats-cpu-progress');
-            
+
             if (server.cpu) {
                 const loadAvg = server.cpu.load_avg_1;
                 cpuLoad.textContent = loadAvg;
-                
+
                 // CPU load, 1 değerini %100 olarak kabul edelim (tek çekirdekli CPU için)
                 let cpuPercent = Math.min(loadAvg * 100, 100);
                 cpuProgress.style.width = cpuPercent + '%';
                 cpuProgress.setAttribute('aria-valuenow', cpuPercent);
-                
+
                 // Renklendirme
                 cpuProgress.classList.remove('bg-success', 'bg-warning', 'bg-danger');
                 if (cpuPercent < 50) {
@@ -539,18 +539,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     cpuProgress.classList.add('bg-danger');
                 }
             }
-            
+
             // Bellek kullanımı
             const memoryUsed = document.getElementById('stats-memory-used');
             const memoryProgress = document.getElementById('stats-memory-progress');
-            
+
             if (server.memory) {
                 memoryUsed.textContent = server.memory.used + ' MB / ' + server.memory.total + ' MB';
-                
+
                 const memoryPercent = server.memory.percent_used;
                 memoryProgress.style.width = memoryPercent + '%';
                 memoryProgress.setAttribute('aria-valuenow', memoryPercent);
-                
+
                 // Renklendirme
                 memoryProgress.classList.remove('bg-success', 'bg-warning', 'bg-danger');
                 if (memoryPercent < 50) {
@@ -561,18 +561,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     memoryProgress.classList.add('bg-danger');
                 }
             }
-            
+
             // Disk kullanımı
             const diskUsed = document.getElementById('stats-disk-used');
             const diskProgress = document.getElementById('stats-disk-progress');
-            
+
             if (server.disk) {
                 diskUsed.textContent = server.disk.used + ' GB / ' + server.disk.total + ' GB';
-                
+
                 const diskPercent = server.disk.percent_used;
                 diskProgress.style.width = diskPercent + '%';
                 diskProgress.setAttribute('aria-valuenow', diskPercent);
-                
+
                 // Renklendirme
                 diskProgress.classList.remove('bg-info', 'bg-warning', 'bg-danger');
                 if (diskPercent < 70) {
@@ -583,7 +583,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     diskProgress.classList.add('bg-danger');
                 }
             }
-            
+
             // Sistem bilgileri
             if (server.system) {
                 document.getElementById('stats-os').textContent = server.system.os;
@@ -592,7 +592,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('stats-uptime-full').textContent = server.system.uptime;
                 document.getElementById('stats-uptime').textContent = 'Uptime: ' + server.system.uptime;
             }
-            
+
             // PHP bilgileri
             if (server.php) {
                 document.getElementById('stats-php-version').textContent = server.php.version;
@@ -601,27 +601,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('stats-php-upload-max-filesize').textContent = server.php.upload_max_filesize;
             }
         }
-        
+
         // Bağlantı bilgileri
         if (data.connections) {
             const connections = data.connections;
             document.getElementById('stats-connections').textContent = connections.total;
             document.getElementById('stats-connections-count').textContent = connections.total;
-            
+
             // IP tablosu
             const ipTable = document.getElementById('stats-connections-table').querySelector('tbody');
             ipTable.innerHTML = '';
-            
+
             if (Object.keys(connections.by_ip).length > 0) {
                 for (const [ip, count] of Object.entries(connections.by_ip)) {
                     const row = document.createElement('tr');
-                    
+
                     const ipCell = document.createElement('td');
                     ipCell.textContent = ip;
-                    
+
                     const countCell = document.createElement('td');
                     countCell.textContent = count;
-                    
+
                     row.appendChild(ipCell);
                     row.appendChild(countCell);
                     ipTable.appendChild(row);
@@ -636,41 +636,41 @@ document.addEventListener('DOMContentLoaded', function () {
                 ipTable.appendChild(row);
             }
         }
-        
+
         // Sanal host istatistikleri
         if (data.vhosts) {
             const vhosts = data.vhosts;
             const vhostsTable = document.getElementById('stats-vhosts-table').querySelector('tbody');
             vhostsTable.innerHTML = '';
-            
+
             if (Object.keys(vhosts).length > 0) {
                 for (const [serverName, stats] of Object.entries(vhosts)) {
                     const row = document.createElement('tr');
-                    
+
                     // Sanal host adı
                     const nameCell = document.createElement('td');
                     nameCell.textContent = serverName;
-                    
+
                     // Hit sayısı
                     const hitsCell = document.createElement('td');
                     hitsCell.textContent = stats.hits.toLocaleString();
-                    
+
                     // Hata sayısı
                     const errorsCell = document.createElement('td');
                     errorsCell.textContent = stats.errors.toLocaleString();
-                    
+
                     // Son erişim
                     const lastAccessCell = document.createElement('td');
                     lastAccessCell.textContent = stats.last_access;
-                    
+
                     // Access log boyutu
                     const accessLogCell = document.createElement('td');
                     accessLogCell.textContent = formatBytes(stats.access_log_size);
-                    
+
                     // Error log boyutu
                     const errorLogCell = document.createElement('td');
                     errorLogCell.textContent = formatBytes(stats.error_log_size);
-                    
+
                     row.appendChild(nameCell);
                     row.appendChild(hitsCell);
                     row.appendChild(errorsCell);
@@ -690,32 +690,52 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-    
+
     // Boyut birimlerini okunaklı formata dönüştüren yardımcı fonksiyon
     function formatBytes(bytes, decimals = 2) {
         if (bytes === 0) return '0 B';
-        
+
         const k = 1024;
         const dm = decimals < 0 ? 0 : decimals;
         const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        
+
         const i = Math.floor(Math.log(bytes) / Math.log(k));
-        
+
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
-    
+
     // Butonlara olay dinleyicileri ekle
     if (statsRefreshBtn) {
         statsRefreshBtn.addEventListener('click', loadStats);
     }
-    
+
     // Modal açıldığında otomatik olarak yükle
     if (statsModal) {
         statsModal.addEventListener('shown.bs.modal', function () {
             loadStats();
         });
     }
-    
+
     // Initial counter update
     updateCounter();
+
+    // PHP özel ayarları işlevselliği (Ekleme formu)
+    const usePHPIniSettings = document.getElementById('usePHPIniSettings');
+    const phpSettingsBody = document.querySelector('.php-settings-body');
+    
+    if (usePHPIniSettings && phpSettingsBody) {
+        usePHPIniSettings.addEventListener('change', function() {
+            phpSettingsBody.style.display = this.checked ? 'block' : 'none';
+        });
+    }
+    
+    // PHP özel ayarları işlevselliği (Düzenleme formu)
+    const editUsePHPIniSettings = document.getElementById('editUsePHPIniSettings');
+    const editPhpSettingsBody = document.querySelector('#editPhpSettings .php-settings-body');
+    
+    if (editUsePHPIniSettings && editPhpSettingsBody) {
+        editUsePHPIniSettings.addEventListener('change', function() {
+            editPhpSettingsBody.style.display = this.checked ? 'block' : 'none';
+        });
+    }
 });

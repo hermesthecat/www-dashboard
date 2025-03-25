@@ -12,12 +12,13 @@ header('Content-Type: application/json');
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'server_stats';
 
 // Windows sistemleri için CPU yükü hesaplama
-function getWindowsCpuLoad() {
+function getWindowsCpuLoad()
+{
     $cpuLoad = [0, 0, 0]; // Varsayılan değerler
-    
+
     $cmd = 'wmic cpu get loadpercentage /value';
     exec($cmd, $output);
-    
+
     if (!empty($output)) {
         foreach ($output as $line) {
             if (strpos($line, 'LoadPercentage') !== false) {
@@ -29,7 +30,7 @@ function getWindowsCpuLoad() {
             }
         }
     }
-    
+
     return $cpuLoad;
 }
 
@@ -45,7 +46,7 @@ function getServerStats()
         // Windows için alternatif yöntem
         $loadAvg = getWindowsCpuLoad();
     }
-    
+
     $stats['cpu'] = [
         'load_avg_1' => round($loadAvg[0], 2),
         'load_avg_5' => round($loadAvg[1], 2),
