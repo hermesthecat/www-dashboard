@@ -174,7 +174,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                 <!-- Language Switcher -->
                 <div class="dropdown language-switcher">
                     <button class="btn dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-translate"></i>
+                        <i class="bi bi-translate me-2"></i>
                         <?php echo $available_languages[getCurrentLanguage()]; ?>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
