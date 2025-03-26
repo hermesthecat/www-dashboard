@@ -95,15 +95,15 @@ return [
 
     // Statistics modal
     'server_stats' => 'Sunucu İstatistikleri',
-    'system' => 'Sistem',
-    'cpu' => 'CPU',
-    'memory' => 'Bellek',
-    'disk' => 'Disk',
+    'system' => 'Sistem Bilgileri',
+    'cpu' => 'CPU Kullanımı',
+    'memory' => 'Bellek Kullanımı',
+    'disk' => 'Disk Kullanımı',
     'apache' => 'Apache',
     'php' => 'PHP',
-    'connections' => 'Bağlantılar',
-    'vhost_stats' => 'VHost İstatistikleri',
-    'load_avg' => 'Yük Ortalaması',
+    'connections' => 'Bağlantı Detayları',
+    'vhost_stats' => 'Sanal Host İstatistikleri',
+    'load_avg' => 'Ortalama Yük',
     'used' => 'Kullanılan',
     'free' => 'Boş',
     'processes' => 'İşlemler',
@@ -111,11 +111,24 @@ return [
     'uptime' => 'Çalışma Süresi',
     'active_connections' => 'Aktif Bağlantılar',
     'by_ip' => 'IP\'ye Göre',
-    'access_log_size' => 'Erişim Log Boyutu',
-    'error_log_size' => 'Hata Log Boyutu',
+    'access_log_size' => 'Erişim Logu Boyutu',
+    'error_log_size' => 'Hata Logu Boyutu',
     'hits' => 'İstek Sayısı',
     'errors' => 'Hatalar',
     'last_access' => 'Son Erişim',
+    'os' => 'İşletim Sistemi',
+    'server_software' => 'Sunucu Yazılımı',
+    'hostname' => 'Bilgisayar Adı',
+    'php_info' => 'PHP Bilgileri',
+    'virtual_host' => 'Sanal Host',
+    'loading_data' => 'Veri yükleniyor...',
+    'connection_summary' => 'Bağlantı Özeti',
+    'total_active_connections' => 'Toplam Aktif Bağlantı',
+    'most_connected_ips' => 'En Çok Bağlantı Yapan IP\'ler',
+    'ip_address' => 'IP Adresi',
+    'connection_count' => 'Bağlantı Sayısı',
+    'last_update' => 'Son Güncelleme',
+    'refresh' => 'Yenile',
 
     // Status indicators
     'status' => 'Durum',
@@ -145,4 +158,26 @@ return [
     'select_log_file' => 'Lütfen görüntülemek için bir log dosyası seçin',
     'proxy_save_failed' => 'Proxy ayarları kaydedilemedi',
     'proxy_save_failed_try_again' => 'Proxy ayarları kaydedilemedi. Lütfen tekrar deneyin',
+
+    // JavaScript messages
+    'no_active_connections' => 'Aktif bağlantı yok.',
+    'no_vhosts_found' => 'Sanal host bulunamadı.',
+    'stats_loading_error' => 'İstatistikler yüklenirken bir hata oluştu.',
+    'uptime_prefix' => 'Uptime: ',
+    'seconds_suffix' => ' saniye',
+    'last_update_prefix' => 'Son Güncelleme: ',
+
+    // Form help texts
+    'memory_limit_help' => 'Örnek: 128M, 256M, 1G',
+    'execution_time_help' => 'Saniye cinsinden',
+    'filesize_help' => 'Örnek: 8M, 16M, 1G',
+
+    // Loading messages
+    'loading' => 'Yükleniyor...',
+    'loading_statistics' => 'İstatistikler yükleniyor...',
+    'loading_logs' => 'Loglar yükleniyor...',
+
+    // Badge texts
+    'ssl_badge_title' => 'SSL Sertifikası Var',
+    'php_badge_title' => 'PHP Sürümü',
 ];

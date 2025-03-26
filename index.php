@@ -212,6 +212,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                             <input type="text" id="searchInput" class="form-control" placeholder="<?php echo __('search_placeholder'); ?>">
                         </div>
                     </div>
+
                     <div class="card-body">
                         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 g-4" id="vhostCards">
                             <?php foreach ($vhosts as $vhost): ?>
@@ -229,12 +230,12 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                                         data-php-version="<?php echo htmlspecialchars($vhost['phpVersion'] ?? 'Default'); ?>"
                                                         data-ssl="<?php echo !empty($vhost['ssl']) && $vhost['ssl'] ? 'true' : 'false'; ?>"
                                                         data-conf-file="<?php echo htmlspecialchars($vhost['confFile'] ?? ''); ?>">
-                                                        <i class="bi bi-pencil"></i> <?php echo __('edit'); ?>
+                                                        <i class="bi bi-pencil"></i>
                                                     </button>
                                                     <button type="button" class="btn btn-danger btn-sm delete-vhost"
                                                         data-server-name="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
                                                         data-conf-file="<?php echo htmlspecialchars($vhost['confFile'] ?? ''); ?>">
-                                                        <i class="bi bi-trash"></i> <?php echo __('delete'); ?>
+                                                        <i class="bi bi-trash"></i>
                                                     </button>
                                                 </div>
                                                 <span class="status-indicator"
@@ -284,14 +285,14 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                             <div class="row mb-2">
                                                 <?php if (!empty($vhost['ssl']) && $vhost['ssl']): ?>
                                                     <div class="col-auto">
-                                                        <span class="badge bg-success" title="SSL Sertifikası Var">
+                                                        <span class="badge bg-success" title="<?php echo __('ssl_badge_title'); ?>">
                                                             <i class="bi bi-shield-lock"></i> SSL
                                                         </span>
                                                     </div>
                                                 <?php endif; ?>
                                                 <?php if (!empty($vhost['phpVersion'])): ?>
                                                     <div class="col-auto ms-auto">
-                                                        <span class="badge bg-info" title="PHP Sürümü">
+                                                        <span class="badge bg-info" title="<?php echo __('php_badge_title'); ?>">
                                                             <i class="bi bi-filetype-php"></i> PHP <?php echo htmlspecialchars($vhost['phpVersion']); ?>
                                                         </span>
                                                     </div>
@@ -462,22 +463,22 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                 <div class="mb-3">
                                     <label for="phpMemoryLimit" class="form-label"><?php echo __('memory_limit'); ?></label>
                                     <input type="text" class="form-control" id="phpMemoryLimit" name="php_memory_limit" placeholder="128M">
-                                    <div class="form-text">Örnek: 128M, 256M, 1G</div>
+                                    <div class="form-text"><?php echo __('memory_limit_help'); ?></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="phpMaxExecutionTime" class="form-label"><?php echo __('max_execution_time'); ?></label>
                                     <input type="number" class="form-control" id="phpMaxExecutionTime" name="php_max_execution_time" placeholder="30">
-                                    <div class="form-text">Saniye cinsinden</div>
+                                    <div class="form-text"><?php echo __('execution_time_help'); ?></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="phpUploadMaxFilesize" class="form-label"><?php echo __('upload_max_filesize'); ?></label>
                                     <input type="text" class="form-control" id="phpUploadMaxFilesize" name="php_upload_max_filesize" placeholder="8M">
-                                    <div class="form-text">Örnek: 8M, 16M, 1G</div>
+                                    <div class="form-text"><?php echo __('filesize_help'); ?></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="phpPostMaxSize" class="form-label"><?php echo __('post_max_size'); ?></label>
                                     <input type="text" class="form-control" id="phpPostMaxSize" name="php_post_max_size" placeholder="8M">
-                                    <div class="form-text">Örnek: 8M, 16M, 1G</div>
+                                    <div class="form-text"><?php echo __('filesize_help'); ?></div>
                                 </div>
                                 <div class="mb-3 form-check">
                                     <input type="checkbox" class="form-check-input" id="phpDisplayErrors" name="php_display_errors">
@@ -747,9 +748,9 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                         <div class="col-12">
                             <div id="logLoadingIndicator" class="text-center d-none">
                                 <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
+                                    <span class="visually-hidden"><?php echo __('loading'); ?></span>
                                 </div>
-                                <p>Loading logs...</p>
+                                <p><?php echo __('loading_logs'); ?></p>
                             </div>
 
                             <div id="logContent" class="log-viewer">
@@ -783,9 +784,9 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                         <div class="col-12">
                             <div id="statsLoadingIndicator" class="text-center">
                                 <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
+                                    <span class="visually-hidden"><?php echo __('loading'); ?></span>
                                 </div>
-                                <p>Loading statistics...</p>
+                                <p><?php echo __('loading_statistics'); ?></p>
                             </div>
                         </div>
                     </div>
@@ -883,46 +884,46 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                 <div class="tab-pane fade show active" id="system" role="tabpanel" aria-labelledby="system-tab">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <h5 class="mb-3">Sistem Bilgileri</h5>
+                                            <h5 class="mb-3"><?php echo __('system'); ?></h5>
                                             <table class="table table-sm">
                                                 <tbody>
                                                     <tr>
-                                                        <th width="30%">İşletim Sistemi</th>
+                                                        <th width="30%"><?php echo __('os'); ?></th>
                                                         <td id="stats-os">-</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Sunucu Yazılımı</th>
+                                                        <th><?php echo __('server_software'); ?></th>
                                                         <td id="stats-server-software">-</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Bilgisayar Adı</th>
+                                                        <th><?php echo __('hostname'); ?></th>
                                                         <td id="stats-hostname">-</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Çalışma Süresi</th>
+                                                        <th><?php echo __('uptime'); ?></th>
                                                         <td id="stats-uptime-full">-</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                         <div class="col-md-6">
-                                            <h5 class="mb-3">PHP Bilgileri</h5>
+                                            <h5 class="mb-3"><?php echo __('php_info'); ?></h5>
                                             <table class="table table-sm">
                                                 <tbody>
                                                     <tr>
-                                                        <th width="30%">PHP Sürümü</th>
+                                                        <th width="30%"><?php echo __('php_version'); ?></th>
                                                         <td id="stats-php-version">-</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Bellek Limiti</th>
+                                                        <th><?php echo __('memory_limit'); ?></th>
                                                         <td id="stats-php-memory-limit">-</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Çalışma Süresi</th>
+                                                        <th><?php echo __('max_execution_time'); ?></th>
                                                         <td id="stats-php-max-execution-time">-</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Yükleme Limiti</th>
+                                                        <th><?php echo __('upload_max_filesize'); ?></th>
                                                         <td id="stats-php-upload-max-filesize">-</td>
                                                     </tr>
                                                 </tbody>
@@ -934,17 +935,17 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                     <table class="table table-sm table-hover" id="stats-vhosts-table">
                                         <thead>
                                             <tr>
-                                                <th width="30%">Sanal Host</th>
-                                                <th>Hit</th>
-                                                <th>Hata</th>
-                                                <th>Son Erişim</th>
-                                                <th>Access Log</th>
-                                                <th>Error Log</th>
+                                                <th width="30%"><?php echo __('virtual_host'); ?></th>
+                                                <th><?php echo __('hits'); ?></th>
+                                                <th><?php echo __('errors'); ?></th>
+                                                <th><?php echo __('last_access'); ?></th>
+                                                <th><?php echo __('access_log_size'); ?></th>
+                                                <th><?php echo __('error_log_size'); ?></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="6" class="text-center">Veri yükleniyor...</td>
+                                                <td colspan="6" class="text-center"><?php echo __('loading_data'); ?></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -952,28 +953,28 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                 <div class="tab-pane fade" id="connections" role="tabpanel" aria-labelledby="connections-tab">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <h5 class="mb-3">Bağlantı Özeti</h5>
+                                            <h5 class="mb-3"><?php echo __('connection_summary'); ?></h5>
                                             <div class="card mb-3">
                                                 <div class="card-body">
                                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                                        <span class="h6 mb-0">Toplam Aktif Bağlantı:</span>
+                                                        <span class="h6 mb-0"><?php echo __('total_active_connections'); ?>:</span>
                                                         <span class="badge bg-primary fs-6" id="stats-connections-count">0</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <h5 class="mb-3">En Çok Bağlantı Yapan IP'ler</h5>
+                                            <h5 class="mb-3"><?php echo __('most_connected_ips'); ?></h5>
                                             <table class="table table-sm table-hover" id="stats-connections-table">
                                                 <thead>
                                                     <tr>
-                                                        <th>IP Adresi</th>
-                                                        <th>Bağlantı Sayısı</th>
+                                                        <th><?php echo __('ip_address'); ?></th>
+                                                        <th><?php echo __('connection_count'); ?></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td colspan="2" class="text-center">Veri yükleniyor...</td>
+                                                        <td colspan="2" class="text-center"><?php echo __('loading_data'); ?></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -985,17 +986,18 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <div class="small text-muted me-auto" id="stats-last-update">Son Güncelleme: -</div>
+                    <div class="small text-muted me-auto" id="stats-last-update"><?php echo __('last_update'); ?>: -</div>
                     <button type="button" class="btn btn-outline-primary me-2" id="statsRefreshBtn">
-                        <i class="bi bi-arrow-clockwise"></i> Yenile
+                        <i class="bi bi-arrow-clockwise"></i> <?php echo __('refresh'); ?>
                     </button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo __('close'); ?></button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
 </body>

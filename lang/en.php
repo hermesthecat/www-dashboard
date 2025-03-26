@@ -116,6 +116,19 @@ return [
     'hits' => 'Hits',
     'errors' => 'Errors',
     'last_access' => 'Last Access',
+    'os' => 'Operating System',
+    'server_software' => 'Server Software',
+    'hostname' => 'Hostname',
+    'php_info' => 'PHP Information',
+    'virtual_host' => 'Virtual Host',
+    'loading_data' => 'Loading data...',
+    'connection_summary' => 'Connection Summary',
+    'total_active_connections' => 'Total Active Connections',
+    'most_connected_ips' => 'Most Connected IPs',
+    'ip_address' => 'IP Address',
+    'connection_count' => 'Connection Count',
+    'last_update' => 'Last Update',
+    'refresh' => 'Refresh',
 
     // Status indicators
     'status' => 'Status',
@@ -146,4 +159,26 @@ return [
     'select_log_file' => 'Please select a log file to view',
     'proxy_save_failed' => 'Failed to save proxy settings',
     'proxy_save_failed_try_again' => 'Failed to save proxy settings. Please try again',
+
+    // JavaScript messages
+    'no_active_connections' => 'No active connections.',
+    'no_vhosts_found' => 'No virtual hosts found.',
+    'stats_loading_error' => 'An error occurred while loading statistics.',
+    'uptime_prefix' => 'Uptime: ',
+    'seconds_suffix' => ' seconds',
+    'last_update_prefix' => 'Last Update: ',
+
+    // Form help texts
+    'memory_limit_help' => 'Example: 128M, 256M, 1G',
+    'execution_time_help' => 'In seconds',
+    'filesize_help' => 'Example: 8M, 16M, 1G',
+
+    // Loading messages
+    'loading' => 'Loading...',
+    'loading_statistics' => 'Loading statistics...',
+    'loading_logs' => 'Loading logs...',
+
+    // Badge texts
+    'ssl_badge_title' => 'SSL Certificate Available',
+    'php_badge_title' => 'PHP Version',
 ];

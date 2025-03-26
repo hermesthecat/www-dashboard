@@ -838,9 +838,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Language Switcher
     function switchLanguage(lang) {
         $.ajax({
-            url: 'set_language.php',
+            url: 'lang/language.php',
             type: 'POST',
             data: {
+                set_language: true,
                 lang: lang
             },
             dataType: 'json',
