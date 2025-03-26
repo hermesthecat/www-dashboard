@@ -152,7 +152,15 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
 
             // Proxy settings
             proxy_save_failed: '<?php echo __('proxy_save_failed'); ?>',
-            proxy_save_failed_try_again: '<?php echo __('proxy_save_failed_try_again'); ?>'
+            proxy_save_failed_try_again: '<?php echo __('proxy_save_failed_try_again'); ?>',
+            
+            // Stats related
+            stats_loading_error: '<?php echo __('stats_loading_error'); ?>',
+            no_active_connections: '<?php echo __('no_active_connections'); ?>',
+            no_vhosts_found: '<?php echo __('no_vhosts_found'); ?>',
+            seconds_suffix: '<?php echo __('seconds_suffix'); ?>',
+            last_update_prefix: '<?php echo __('last_update_prefix'); ?>',
+            loading_indicator: '...'
         };
     </script>
 </head>
@@ -593,22 +601,22 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                 <div class="mb-3">
                                     <label for="editPhpMemoryLimit" class="form-label"><?php echo __('memory_limit'); ?></label>
                                     <input type="text" class="form-control" id="editPhpMemoryLimit" name="php_memory_limit" placeholder="128M">
-                                    <div class="form-text">Örnek: 128M, 256M, 1G</div>
+                                    <div class="form-text"><?php echo __('memory_limit_help'); ?></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editPhpMaxExecutionTime" class="form-label"><?php echo __('max_execution_time'); ?></label>
                                     <input type="number" class="form-control" id="editPhpMaxExecutionTime" name="php_max_execution_time" placeholder="30">
-                                    <div class="form-text">Saniye cinsinden</div>
+                                    <div class="form-text"><?php echo __('execution_time_help'); ?></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editPhpUploadMaxFilesize" class="form-label"><?php echo __('upload_max_filesize'); ?></label>
                                     <input type="text" class="form-control" id="editPhpUploadMaxFilesize" name="php_upload_max_filesize" placeholder="8M">
-                                    <div class="form-text">Örnek: 8M, 16M, 1G</div>
+                                    <div class="form-text"><?php echo __('filesize_help'); ?></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editPhpPostMaxSize" class="form-label"><?php echo __('post_max_size'); ?></label>
                                     <input type="text" class="form-control" id="editPhpPostMaxSize" name="php_post_max_size" placeholder="8M">
-                                    <div class="form-text">Örnek: 8M, 16M, 1G</div>
+                                    <div class="form-text"><?php echo __('memory_limit_help'); ?></div>
                                 </div>
                                 <div class="mb-3 form-check">
                                     <input type="checkbox" class="form-check-input" id="editPhpDisplayErrors" name="php_display_errors">

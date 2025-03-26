@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const text = statusIndicator.querySelector('.status-text');
 
         statusIndicator.classList.add('status-checking');
-        text.textContent = '...';
+        text.textContent = lang.loading_indicator;
 
         fetch(`check_status.php?server=${encodeURIComponent(server)}&ssl=${ssl}`)
             .then(response => response.json())
@@ -535,14 +535,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Son güncelleme zamanını göster
                 const now = new Date();
-                statsLastUpdate.textContent = 'Son Güncelleme: ' +
+                statsLastUpdate.textContent = lang.last_update_prefix +
                     now.toLocaleDateString('tr-TR') + ' ' +
                     now.toLocaleTimeString('tr-TR');
             })
             .catch(error => {
                 statsLoadingIndicator.classList.add('d-none');
                 console.error('Error loading stats:', error);
-                alert('İstatistikler yüklenirken bir hata oluştu.');
+                alert(lang.stats_loading_error);
             });
     }
 
@@ -626,14 +626,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('stats-server-software').textContent = server.system.server_software;
                 document.getElementById('stats-hostname').textContent = server.system.hostname;
                 document.getElementById('stats-uptime-full').textContent = server.system.uptime;
-                document.getElementById('stats-uptime').textContent = 'Uptime: ' + server.system.uptime;
+                document.getElementById('stats-uptime').textContent = lang.uptime_prefix + server.system.uptime;
             }
 
             // PHP bilgileri
             if (server.php) {
                 document.getElementById('stats-php-version').textContent = server.php.version;
                 document.getElementById('stats-php-memory-limit').textContent = server.php.memory_limit;
-                document.getElementById('stats-php-max-execution-time').textContent = server.php.max_execution_time + ' saniye';
+                document.getElementById('stats-php-max-execution-time').textContent = server.php.max_execution_time + lang.seconds_suffix;
                 document.getElementById('stats-php-upload-max-filesize').textContent = server.php.upload_max_filesize;
             }
         }
@@ -667,7 +667,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const cell = document.createElement('td');
                 cell.colSpan = 2;
                 cell.className = 'text-center';
-                cell.textContent = 'Aktif bağlantı yok.';
+                cell.textContent = lang.no_active_connections;
                 row.appendChild(cell);
                 ipTable.appendChild(row);
             }
@@ -720,7 +720,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const cell = document.createElement('td');
                 cell.colSpan = 6;
                 cell.className = 'text-center';
-                cell.textContent = 'Sanal host bulunamadı.';
+                cell.textContent = lang.no_vhosts_found;
                 row.appendChild(cell);
                 vhostsTable.appendChild(row);
             }
