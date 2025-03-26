@@ -230,7 +230,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                         <div class="card-header bg-transparent">
                                             <div class="d-flex justify-content-between">
                                                 <div class="btn-group btn-group-sm">
-                                                    <button type="button" class="btn btn-primary btn-sm edit-vhost me-2"
+                                                    <button type="button" class="btn btn-primary btn-sm edit-vhost me-2 d-flex align-items-center justify-content-center"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#editVhostModal"
                                                         data-server-name="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
@@ -241,7 +241,7 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                                                         data-conf-file="<?php echo htmlspecialchars($vhost['confFile'] ?? ''); ?>">
                                                         <i class="bi bi-pencil"></i>
                                                     </button>
-                                                    <button type="button" class="btn btn-danger btn-sm delete-vhost"
+                                                    <button type="button" class="btn btn-danger btn-sm delete-vhost d-flex align-items-center justify-content-center"
                                                         data-server-name="<?php echo htmlspecialchars($vhost['serverName'] ?? ''); ?>"
                                                         data-conf-file="<?php echo htmlspecialchars($vhost['confFile'] ?? ''); ?>">
                                                         <i class="bi bi-trash"></i>
