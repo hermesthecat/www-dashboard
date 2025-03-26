@@ -180,9 +180,10 @@ $vhosts = parseVhosts(VHOSTS_FOLDER);
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
                         <?php foreach ($available_languages as $code => $name): ?>
                             <li>
-                                <a class="dropdown-item <?php echo getCurrentLanguage() === $code ? 'active' : ''; ?>"
+                                <a class="dropdown-item d-flex align-items-center <?php echo getCurrentLanguage() === $code ? 'active' : ''; ?>"
                                     href="#"
                                     data-lang="<?php echo $code; ?>">
+                                    <i class="bi bi-globe me-2"></i>
                                     <?php echo $name; ?>
                                 </a>
                             </li>
