@@ -39,7 +39,7 @@ switch ($logType) {
         $logFile = $serverName ? LOG_FOLDER . '/' . $serverName . '-access.log' : LOG_FOLDER . '/access.log';
         break;
     case 'php':
-        $logFile = PHP_ERROR_LOG_FOLDER . '/' . $serverName . '-php_error.log';
+        $logFile = PHP_ERROR_LOG_FOLDER . '/' . $serverName . '.log';
         break;
     default:
         die(json_encode([
